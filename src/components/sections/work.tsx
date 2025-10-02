@@ -19,10 +19,10 @@ const work: Work[] = [
     start: "January 2024",
     end: "Present",
     points: [
-      "Developing a edTech platform using React, NextJS, Supabase, TailwindCSS, and Drizzle to help students navigate their post-grad journey.",
-      "Adopted by 3 organizations, expecting more, with 3,300 active users.",
+      "Engineered an edTech platform leveraging React, NextJS, Supabase, TailwindCSS, and Drizzle, empowering students in their post-grad journey.",
+      "Adopted by 4 organizations, with a growing user base of 6,000 active users."
     ],
-    tags: ["React", "NextJS", "Supabase", "TailwindCSS", "Drizzle"],
+    tags: ["React", "NextJS", "Supabase", "TailwicndCSS", "Drizzle", "PostgreSQL"],
   },
   {
     name: "Freelancing",
@@ -130,7 +130,7 @@ const Work = () => { // hi ethan :]
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="w-full max-w-2xl"
+                className="w-full max-w-2xl min-h-[400px]"
               >
                 <div className="mb-2">
                   <h3 className="text-xl font-mono font-bold">
