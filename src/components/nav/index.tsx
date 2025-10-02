@@ -67,7 +67,7 @@ export default function Navbar() {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <Link href="/" className="group">
-                <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent hover:from-primary/80 hover:to-primary/40 transition-all duration-300">
+                <span className="text-2xl font-bold text-foreground hover:text-primary transition-all duration-300">
                   Evan Yu
                 </span>
               </Link>
