@@ -29,8 +29,7 @@ export default function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
 
-      // Determine active section
-      const sections = ["hero", "work", "skills", "contact"];
+      const sections = ["hero", "work"];
       const current = sections.find((section) => {
         const element = document.getElementById(section);
         if (element) {
@@ -41,6 +40,8 @@ export default function Navbar() {
       });
       if (current) setActiveSection(current);
     };
+
+    handleScroll(); // update on page load
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -96,9 +97,12 @@ export default function Navbar() {
                           : "text-foreground/70 hover:text-foreground"
                       }`}
                       onClick={(e) => {
-                        e.preventDefault();
-                        const target = document.querySelector(item.href);
-                        target?.scrollIntoView({ behavior: "smooth" });
+                        const selector = item.href.replace("/#", "#");
+                        const target = document.querySelector(selector);
+                        if (target) {
+                          e.preventDefault();
+                          target.scrollIntoView({ behavior: "smooth" });
+                        }
                       }}
                     >
                       <span className="relative z-10">{item.name}</span>
