@@ -116,7 +116,7 @@ export const SideWeather = () => {
     */
     const isNight = data?.daily.time.some(time => time.getHours() >= 18 || time.getHours() <= 6);
     const classes = "rotate-90 w-4 h-4 flex-shrink-0"
-    if (!data) return "?";
+    if (!data) return <CloudSun className={classes} />;
     const code = data.current.weatherCode;
     if (code === 0) return isNight ? <Moon className={classes} /> : <Sun className={classes} />;
     if (code <= 3) return isNight ? <CloudMoon className={classes} /> : <CloudSun className={classes} />;
