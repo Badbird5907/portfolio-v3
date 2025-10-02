@@ -32,7 +32,7 @@ export default function About() {
             >
               {/* Description */}
               <p className="text-muted-foreground text-lg md:text-xl">
-                As a full-stack software engineer, I am driven by the desire to create impactful and meaningful products.
+                As a full-stack software engineer, I am driven by the desire to create impactful and meaningful projects.
                 I also enjoy participating in hackathons and embracing new learning opportunities.
                 I have won 3 out of the 5 hackathons I have entered.
                 Currently, I am studying mathematics at the University of Toronto.
