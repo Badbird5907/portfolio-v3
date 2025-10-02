@@ -24,6 +24,8 @@ export default function SideTime() {
     return () => clearInterval(interval);
   }, []);
 
+  if (!time) return null; // Time will be set immediately on mount
+
   return (
     <div
       className="font-mono text-sm text-muted-foreground tracking-widest uppercase"
@@ -32,7 +34,7 @@ export default function SideTime() {
         textOrientation: "mixed"
       }}
     >
-      {time || "YYZ 0:00:00 AM"}
+      {time}
     </div>
   );
 }

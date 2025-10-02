@@ -74,11 +74,20 @@ async function getWeatherData() {
   return weatherData;
 }
 
+export const useWeatherReady = () => { // Load the weather data while the other views are shown
+  const { data, error } = useQuery({
+    queryKey: ["weather"],
+    queryFn: getWeatherData,
+    refetchInterval: 5 * 60 * 1000,
+  });
+  return !error && !!data;
+};
+
 export const SideWeather = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["weather"],
     queryFn: getWeatherData,
-    refetchInterval: 5 * 60 * 1000, // Refetch every 5 minutes
+    refetchInterval: 5 * 60 * 1000,
   });
   const { data: country } = useQuery({
     queryKey: ["country"],
@@ -90,7 +99,7 @@ export const SideWeather = () => {
   }, [country]);
 
   if (error) {
-    return null; // Silently fail for better UX
+    return null;
   }
 
   const weatherIcon = useMemo(() => {
@@ -121,6 +130,8 @@ export const SideWeather = () => {
     return <CloudSun className={classes} />;
   }, [data?.current.weatherCode])
 
+  if (!data) return null; // Data will load while other views are shown
+
   return (
     <div
       className="font-mono text-sm text-muted-foreground tracking-widest uppercase"
@@ -129,12 +140,10 @@ export const SideWeather = () => {
         textOrientation: "mixed",
       }}
     >
-      {isLoading || !data ? "..." : (
-        <div className="flex items-center gap-2">
-          {weatherIcon}
-          {`${Math.round(isFreedomUnits ? data.current.temperatureF : data.current.temperature)}°${isFreedomUnits ? "F" : "C"}`}
-        </div>
-      )}
+      <div className="flex items-center gap-2">
+        {weatherIcon}
+        {`${Math.round(isFreedomUnits ? data.current.temperatureF : data.current.temperature)}°${isFreedomUnits ? "F" : "C"}`}
+      </div>
     </div>
   );
 };
