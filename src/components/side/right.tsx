@@ -15,7 +15,7 @@ export default function SideRight() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentView((prev) => (prev + 1) % totalViews);
-    }, 5000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [totalViews]);
