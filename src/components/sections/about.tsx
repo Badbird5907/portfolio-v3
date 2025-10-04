@@ -32,10 +32,9 @@ export default function About() {
             >
               {/* Description */}
               <p className="text-muted-foreground text-lg md:text-xl">
-                As a full-stack software engineer, I am driven by the desire to create impactful and meaningful projects.
-                I also enjoy participating in hackathons and embracing new learning opportunities.
-                I have won 3 out of the 5 hackathons I have entered.
-                Currently, I am studying mathematics at the University of Toronto.
+                As a full-stack software engineer, I’m passionate about building impactful and meaningful projects that make a difference.
+                I actively seek out new learning experiences and enjoy competing in hackathons—having won three out of the five I’ve participated in.
+                Beyond software, I have a strong interest in designing and building hardware, from PCBs to robotics systems.
               </p>
 
               {/* Education */}
@@ -57,7 +56,7 @@ export default function About() {
                 <ul className="space-y-2">
                   <li className="flex items-start">
                     <span className="text-primary mr-2">▸</span>
-                    <span className="text-muted-foreground">Building impactful software products</span>
+                    <span className="text-muted-foreground">Building impactful software projects</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-primary mr-2">▸</span>
@@ -65,7 +64,7 @@ export default function About() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-primary mr-2">▸</span>
-                    <span className="text-muted-foreground">Learning new technologies</span>
+                    <span className="text-muted-foreground">Robotics & hardware design</span>
                   </li>
                 </ul>
               </div>
