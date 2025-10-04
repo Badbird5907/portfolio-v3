@@ -6,6 +6,7 @@ import Typewriter from "typewriter-effect";
 const iAm = [
   "student",
   "software engineer",
+  "hacker",
   "full stack developer",
   "freelancer",
 ];
