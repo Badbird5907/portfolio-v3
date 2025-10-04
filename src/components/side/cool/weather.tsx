@@ -83,7 +83,11 @@ export const useWeatherReady = () => { // Load the weather data while the other 
   return !error && !!data;
 };
 
-export const SideWeather = () => {
+interface SideWeatherProps {
+  isMobile?: boolean;
+}
+
+export const SideWeather = ({ isMobile = false }: SideWeatherProps) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["weather"],
     queryFn: getWeatherData,
@@ -115,7 +119,7 @@ export const SideWeather = () => {
 - 95–99 = Thunderstorms
     */
     const isNight = data?.daily.time.some(time => time.getHours() >= 18 || time.getHours() <= 6);
-    const classes = "rotate-90 w-4 h-4 flex-shrink-0"
+    const classes = isMobile ? "w-4 h-4 flex-shrink-0" : "rotate-90 w-4 h-4 flex-shrink-0"
     if (!data) return <CloudSun className={classes} />;
     const code = data.current.weatherCode;
     if (code === 0) return isNight ? <Moon className={classes} /> : <Sun className={classes} />;
@@ -128,14 +132,14 @@ export const SideWeather = () => {
     if (code >= 80 && code <= 82) return <CloudRain className={classes} />;
     if (code >= 95) return <CloudLightning className={classes} />;
     return <CloudSun className={classes} />;
-  }, [data?.current.weatherCode])
+  }, [data?.current.weatherCode, isMobile])
 
   if (!data) return null; // Data will load while other views are shown
 
   return (
     <div
       className="font-mono text-sm text-muted-foreground tracking-widest uppercase"
-      style={{
+      style={isMobile ? {} : {
         writingMode: "vertical-rl",
         textOrientation: "mixed",
       }}

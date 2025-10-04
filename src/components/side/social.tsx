@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { Github, Linkedin, Twitter, Mail } from "lucide-react";
 
-export default function SideSocial() {
+interface SideSocialProps {
+  isMobile?: boolean;
+}
+
+export default function SideSocial({ isMobile = false }: SideSocialProps) {
   const socials = [
     { icon: Github, href: "https://github.com/Badbird5907", label: "GitHub" },
     { icon: Linkedin, href: "https://linkedin.com/in/ev-yu", label: "LinkedIn" },
@@ -10,8 +14,8 @@ export default function SideSocial() {
   ];
 
   return (
-    <div className="fixed left-6 bottom-0 hidden lg:flex flex-col items-center gap-6 z-10">
-      <ul className="flex flex-col items-center gap-5">
+    <div className={isMobile ? "flex flex-col items-center gap-6" : "fixed left-6 bottom-0 hidden lg:flex flex-col items-center gap-6 z-10"}>
+      <ul className={isMobile ? "flex flex-row items-center gap-6" : "flex flex-col items-center gap-5"}>
         {socials.map((social) => (
           <li key={social.label}>
             <Link
@@ -26,7 +30,7 @@ export default function SideSocial() {
           </li>
         ))}
       </ul>
-      <div className="w-[1px] h-24 bg-muted-foreground/30" />
+      {!isMobile && <div className="w-[1px] h-24 bg-muted-foreground/30" />}
     </div>
   );
 }

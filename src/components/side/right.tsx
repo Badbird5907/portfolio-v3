@@ -6,7 +6,11 @@ import SideTime from "./cool/time";
 import SideWeather, { useWeatherReady } from "./cool/weather";
 import SideLocation from "./cool/location";
 
-export default function SideRight() {
+interface SideRightProps {
+  isMobile?: boolean;
+}
+
+export default function SideRight({ isMobile = false }: SideRightProps) {
   const [currentView, setCurrentView] = useState(2);
   const weatherReady = useWeatherReady();
 
@@ -21,7 +25,7 @@ export default function SideRight() {
   }, [totalViews]);
 
   return (
-    <div className="fixed right-6 bottom-0 hidden lg:flex flex-col items-center gap-6 z-10">
+    <div className={isMobile ? "flex flex-col items-center gap-6" : "fixed right-6 bottom-0 hidden lg:flex flex-col items-center gap-6 z-10"}>
       <AnimatePresence mode="wait">
         {currentView === 0 && (
           <motion.div
@@ -32,7 +36,7 @@ export default function SideRight() {
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className="flex flex-col items-center gap-6 min-w-[24px]"
           >
-            <SideTime />
+            <SideTime isMobile={isMobile} />
           </motion.div>
         )}
         {currentView === 1 && (
@@ -45,7 +49,7 @@ export default function SideRight() {
               transition={{ duration: 0.5, ease: "easeInOut" }}
               className="flex flex-col items-center gap-6 min-w-[24px]"
             >
-              <SideWeather />
+              <SideWeather isMobile={isMobile} />
             </motion.div>
           ) : (
             <motion.div
@@ -56,7 +60,7 @@ export default function SideRight() {
               transition={{ duration: 0.5, ease: "easeInOut" }}
               className="flex flex-col items-center gap-6 min-w-[24px]"
             >
-              <SideLocation />
+              <SideLocation isMobile={isMobile} />
             </motion.div>
           )
         )}
@@ -69,11 +73,11 @@ export default function SideRight() {
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className="flex flex-col items-center gap-6 min-w-[24px]"
           >
-            <SideLocation />
+            <SideLocation isMobile={isMobile} />
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="w-[1px] h-24 bg-muted-foreground/30" />
+      {!isMobile && <div className="w-[1px] h-24 bg-muted-foreground/30" />}
     </div>
   );
 }

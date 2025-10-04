@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-export default function SideTime() {
+interface SideTimeProps {
+  isMobile?: boolean;
+}
+
+export default function SideTime({ isMobile = false }: SideTimeProps) {
   const [time, setTime] = useState("");
 
   useEffect(() => {
@@ -29,7 +33,7 @@ export default function SideTime() {
   return (
     <div
       className="font-mono text-sm text-muted-foreground tracking-widest uppercase"
-      style={{
+      style={isMobile ? {} : {
         writingMode: "vertical-rl",
         textOrientation: "mixed"
       }}
