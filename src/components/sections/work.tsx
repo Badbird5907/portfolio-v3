@@ -56,7 +56,7 @@ const work: Work[] = [
     name: "AetheriaMC / OctoMC",
     title: "Owner",
     start: "December 2019",
-    end: "Present",
+    end: "October 2025",
     points: [
       "Developed a Minecraft server network with over 1,500 unique players.",
       "Used many technologies including Java, MongoDB, Redis, Spring Boot to create a robust game server network.",
