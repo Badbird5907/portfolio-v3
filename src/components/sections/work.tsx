@@ -2,10 +2,12 @@
 
 import React, { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
 
 type Work = {
   name: string;
   title?: string;
+  url?: string;
   start: string;
   end: string;
   points: string[];
@@ -16,6 +18,7 @@ const work: Work[] = [
   {
     name: "Connect",
     title: "Founding Software Engineer",
+    url: "https://connectalum.com/",
     start: "January 2024",
     end: "Present",
     points: [
@@ -25,7 +28,7 @@ const work: Work[] = [
       "Optimized database with targeted indexes and Redis caching; cut query times by 40% and lowered DB CPU.",
       "Scaled serverless backend (AWS Lambda + SST) to 10k+ concurrent requests; implemented async job queues and hot-path caching to maintain 99.9% availability and reduce p95 latency by 10%.",
     ],
-    tags: ["React", "NextJS", "Supabase", "TailwicndCSS", "Drizzle", "PostgreSQL"],
+    tags: ["React", "NextJS", "Supabase", "TailwindCSS", "Drizzle", "PostgreSQL", "AWS", "Vercel"],
   },
   {
     name: "Freelancing",
@@ -138,7 +141,7 @@ const Work = () => { // hi ethan :]
                 <div className="mb-2">
                   <h3 className="text-xl font-mono font-bold">
                     {selectedWork.title && <span className="text-primary">{selectedWork.title} @ </span>}
-                    {selectedWork.name}
+                    {selectedWork.url ? <Link href={selectedWork.url} target="_blank" rel="noopener noreferrer">{selectedWork.name}</Link> : selectedWork.name}
                   </h3>
                   <p className="text-muted-foreground font-mono">
                     {selectedWork.start} - {selectedWork.end}
