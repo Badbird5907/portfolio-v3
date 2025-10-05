@@ -118,9 +118,16 @@ export const SideWeather = ({ isMobile = false }: SideWeatherProps) => {
 - 85–86 = Snow showers
 - 95–99 = Thunderstorms
     */
-    const isNight = data?.daily.time.some(time => time.getHours() >= 18 || time.getHours() <= 6);
     const classes = isMobile ? "w-4 h-4 flex-shrink-0" : "rotate-90 w-4 h-4 flex-shrink-0"
     if (!data) return <CloudSun className={classes} />;
+    
+    const currentTime = data.current.time;
+    const sunrise = data.daily.sunrise[0] ? new Date(data.daily.sunrise[0]) : null;
+    const sunset = data.daily.sunset[0] ? new Date(data.daily.sunset[0]) : null;
+    const isNight = sunrise && sunset 
+      ? currentTime < sunrise || currentTime > sunset
+      : false; // default to day if no sunrise/sunset data
+    
     const code = data.current.weatherCode;
     if (code === 0) return isNight ? <Moon className={classes} /> : <Sun className={classes} />;
     if (code <= 3) return isNight ? <CloudMoon className={classes} /> : <CloudSun className={classes} />;
