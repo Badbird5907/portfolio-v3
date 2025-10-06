@@ -13,7 +13,7 @@ export default function SideLocation({ isMobile = false }: SideLocationProps) {
         textOrientation: "mixed",
       }}
     >
-      <MapPin className={isMobile ? "scale-60" : "rotate-90 scale-60"} /> Toronto, ON, Canada
+      <MapPin className={isMobile ? "w-4 h-4 flex-shrink-0" : "rotate-90 w-4 h-4 flex-shrink-0"} /> Toronto, ON, Canada
     </div>
   );
 }
