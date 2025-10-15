@@ -33,13 +33,16 @@ export default function SideTime({ isMobile = false }: SideTimeProps) {
   return (
     <div
       className="font-mono text-sm text-muted-foreground tracking-widest uppercase"
-      style={isMobile ? {} : {
-        writingMode: "vertical-rl",
-        textOrientation: "mixed"
-      }}
+      style={
+        isMobile
+          ? {}
+          : {
+              writingMode: "vertical-rl",
+              textOrientation: "mixed",
+            }
+      }
     >
       {time}
     </div>
   );
 }
-

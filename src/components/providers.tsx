@@ -13,11 +13,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
             refetchInterval: 5 * 60 * 1000, // 5 minutes
           },
         },
-      })
+      }),
   );
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }
-

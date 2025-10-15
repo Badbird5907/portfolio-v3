@@ -1,7 +1,16 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Cloud, CloudFog, CloudLightning, CloudMoon, CloudRain, CloudSnow, CloudSun, Moon, Sun } from "lucide-react";
+import {
+  CloudFog,
+  CloudLightning,
+  CloudMoon,
+  CloudRain,
+  CloudSnow,
+  CloudSun,
+  Moon,
+  Sun,
+} from "lucide-react";
 import { fetchWeatherApi } from "openmeteo";
 import { useMemo } from "react";
 
@@ -22,7 +31,7 @@ const range = (start: number, stop: number, step: number) =>
 
 const convertToFreedomUnits = (value: number) => {
   return value * 1.8 + 32;
-}
+};
 
 async function getWeatherData() {
   const responses = await fetchWeatherApi(url, weatherParams);
@@ -42,30 +51,30 @@ async function getWeatherData() {
   const weatherData = {
     current: {
       time: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
-      temperature: current.variables(0)!.value(), // Current is only 1 value, therefore `.value()`
-      temperatureF: convertToFreedomUnits(current.variables(0)!.value()),
-      weatherCode: current.variables(1)!.value(),
-      windSpeed: current.variables(2)!.value(),
-      windDirection: current.variables(3)!.value(),
+      temperature: current.variables(0)?.value(), // Current is only 1 value, therefore `.value()`
+      temperatureF: convertToFreedomUnits(current.variables(0)?.value()),
+      weatherCode: current.variables(1)?.value(),
+      windSpeed: current.variables(2)?.value(),
+      windDirection: current.variables(3)?.value(),
     },
     hourly: {
       time: range(
         Number(hourly.time()),
         Number(hourly.timeEnd()),
-        hourly.interval()
+        hourly.interval(),
       ).map((t) => new Date((t + utcOffsetSeconds) * 1000)),
-      temperature: hourly.variables(0)!.valuesArray()!, // `.valuesArray()` get an array of floats
-      humidity: hourly.variables(1)!.valuesArray()!,
+      temperature: hourly.variables(0)?.valuesArray()!, // `.valuesArray()` get an array of floats
+      humidity: hourly.variables(1)?.valuesArray()!,
     },
     daily: {
       time: range(
         Number(daily.time()),
         Number(daily.timeEnd()),
-        daily.interval()
+        daily.interval(),
       ).map((t) => new Date((t + utcOffsetSeconds) * 1000)),
-      weatherCode: daily.variables(0)!.valuesArray()!,
-      temperatureMax: daily.variables(1)!.valuesArray()!,
-      temperatureMin: daily.variables(2)!.valuesArray()!,
+      weatherCode: daily.variables(0)?.valuesArray()!,
+      temperatureMax: daily.variables(1)?.valuesArray()!,
+      temperatureMin: daily.variables(2)?.valuesArray()!,
       sunrise: sunTimesData.daily.sunrise as string[],
       sunset: sunTimesData.daily.sunset as string[],
     },
@@ -74,7 +83,8 @@ async function getWeatherData() {
   return weatherData;
 }
 
-export const useWeatherReady = () => { // Load the weather data while the other views are shown
+export const useWeatherReady = () => {
+  // Load the weather data while the other views are shown
   const { data, error } = useQuery({
     queryKey: ["weather"],
     queryFn: getWeatherData,
@@ -95,7 +105,7 @@ export const SideWeather = ({ isMobile = false }: SideWeatherProps) => {
   });
   const { data: country } = useQuery({
     queryKey: ["country"],
-    queryFn: () => fetch("/api/ip/country").then(res => res.text()),
+    queryFn: () => fetch("/api/ip/country").then((res) => res.text()),
   });
   const isFreedomUnits = useMemo(() => {
     // check if the user's browser location is in the United States (literally the only fucking country that uses Fahrenheit)
@@ -118,38 +128,64 @@ export const SideWeather = ({ isMobile = false }: SideWeatherProps) => {
 - 85–86 = Snow showers
 - 95–99 = Thunderstorms
     */
-    const classes = isMobile ? "w-4 h-4 flex-shrink-0" : "rotate-90 w-4 h-4 flex-shrink-0"
+    const classes = isMobile
+      ? "w-4 h-4 flex-shrink-0"
+      : "rotate-90 w-4 h-4 flex-shrink-0";
     if (!data) return <CloudSun className={classes} />;
-    
+
     const currentTime = data.current.time;
-    const sunrise = data.daily.sunrise[0] ? new Date(data.daily.sunrise[0]) : null;
+    const sunrise = data.daily.sunrise[0]
+      ? new Date(data.daily.sunrise[0])
+      : null;
     const sunset = data.daily.sunset[0] ? new Date(data.daily.sunset[0]) : null;
-    const isNight = sunrise && sunset 
-      ? currentTime < sunrise || currentTime > sunset
-      : false; // default to day if no sunrise/sunset data
-    
+    const isNight =
+      sunrise && sunset ? currentTime < sunrise || currentTime > sunset : false; // default to day if no sunrise/sunset data
+
     const code = data.current.weatherCode;
-    if (code === 0) return isNight ? <Moon className={classes} /> : <Sun className={classes} />;
-    if (code <= 3) return isNight ? <CloudMoon className={classes} /> : <CloudSun className={classes} />;
+    if (code === 0)
+      return isNight ? (
+        <Moon className={classes} />
+      ) : (
+        <Sun className={classes} />
+      );
+    if (code <= 3)
+      return isNight ? (
+        <CloudMoon className={classes} />
+      ) : (
+        <CloudSun className={classes} />
+      );
     if (code >= 45 && code <= 48) return <CloudFog className={classes} />;
     if (code >= 51 && code <= 57) return <CloudRain className={classes} />;
-    if ((code >= 61 && code <= 67) || 
-        (code >= 71 && code <= 77) ||
-        (code >= 85 && code <= 86)) return <CloudSnow className={classes} />;
+    if (
+      (code >= 61 && code <= 67) ||
+      (code >= 71 && code <= 77) ||
+      (code >= 85 && code <= 86)
+    )
+      return <CloudSnow className={classes} />;
     if (code >= 80 && code <= 82) return <CloudRain className={classes} />;
     if (code >= 95) return <CloudLightning className={classes} />;
     return <CloudSun className={classes} />;
-  }, [data?.current.weatherCode, isMobile])
+  }, [
+    data?.current.weatherCode,
+    isMobile,
+    data.current.time,
+    data.daily.sunrise[0],
+    data,
+  ]);
 
   if (!data) return null; // Data will load while other views are shown
 
   return (
     <div
       className="font-mono text-sm text-muted-foreground tracking-widest uppercase"
-      style={isMobile ? {} : {
-        writingMode: "vertical-rl",
-        textOrientation: "mixed",
-      }}
+      style={
+        isMobile
+          ? {}
+          : {
+              writingMode: "vertical-rl",
+              textOrientation: "mixed",
+            }
+      }
     >
       <div className="flex items-center gap-2">
         {weatherIcon}
@@ -160,4 +196,3 @@ export const SideWeather = ({ isMobile = false }: SideWeatherProps) => {
 };
 
 export default SideWeather;
-

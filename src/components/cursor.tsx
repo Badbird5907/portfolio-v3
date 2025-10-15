@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 const Cursor = () => {
   const delay = 5;
@@ -12,13 +12,21 @@ const Cursor = () => {
 
   const requestRef = useRef<number | null>(null);
   const dot = useRef<HTMLDivElement | null>(null);
-  
+
   // Cache CSS colors to avoid repeated getComputedStyle calls
   const primaryColor = useRef<string>("");
   const accentColor = useRef<string>("");
   const isHovering = useRef(false);
 
-  const INTERACTIVE_ELEMENTS = ["LI", "A", "BUTTON", "H1", "svg", "path", "SPAN"];
+  const INTERACTIVE_ELEMENTS = [
+    "LI",
+    "A",
+    "BUTTON",
+    "H1",
+    "svg",
+    "path",
+    "SPAN",
+  ];
 
   const mouseMoveEvent = useCallback((e: MouseEvent) => {
     endX.current = e.clientX;
@@ -42,13 +50,13 @@ const Cursor = () => {
 
     const lastElement = hoveredElements[hoveredElements.length - 1];
     if (!lastElement) return;
-    
+
     const tagName = lastElement.tagName;
     const hasSkillClass = lastElement.classList.contains("skill");
-    
-    const shouldHighlight = 
+
+    const shouldHighlight =
       INTERACTIVE_ELEMENTS.includes(tagName) || hasSkillClass;
-    
+
     if (shouldHighlight && !isHovering.current) {
       dot.current.style.transform = "scale(3)";
       dot.current.style.width = "13px";
@@ -81,8 +89,8 @@ const Cursor = () => {
   useEffect(() => {
     // Cache CSS colors once on mount
     const rootStyles = getComputedStyle(document.documentElement);
-    primaryColor.current = rootStyles.getPropertyValue('--primary').trim();
-    accentColor.current = rootStyles.getPropertyValue('--accent').trim();
+    primaryColor.current = rootStyles.getPropertyValue("--primary").trim();
+    accentColor.current = rootStyles.getPropertyValue("--accent").trim();
 
     document.addEventListener("mousemove", mouseMoveEvent);
     animateDotOutline();
@@ -100,10 +108,10 @@ const Cursor = () => {
       id="cursor-container"
       className="fixed top-0 left-0 z-[999] hidden md:block pointer-events-none"
     >
-      <div 
-        ref={dot} 
+      <div
+        ref={dot}
         className="cursor-dot fixed transition-all duration-100 ease-out rounded-full pointer-events-none"
-        style={{ width: '13px', height: '13px' }}
+        style={{ width: "13px", height: "13px" }}
       />
     </div>
   );

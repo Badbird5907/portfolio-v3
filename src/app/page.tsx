@@ -1,16 +1,15 @@
-import Hero from "@/components/sections/hero";
 import ParticleBackground from "@/components/particles";
-import SideSocial from "@/components/side/social";
-import SideRight from "@/components/side/right";
-import Work from "@/components/sections/work";
 import About from "@/components/sections/about";
-import Footer from "@/components/footer";
+import Hero from "@/components/sections/hero";
+import Work from "@/components/sections/work";
+import SideRight from "@/components/side/right";
+import SideSocial from "@/components/side/social";
 
 export default function Home() {
   return (
     <main className="relative min-h-screen">
       <ParticleBackground />
-      
+
       {/* Desktop: Fixed side panels */}
       <SideSocial />
       <SideRight />
@@ -27,7 +26,6 @@ export default function Home() {
           <SideRight isMobile />
         </div>
       </div>
-
     </main>
   );
 }

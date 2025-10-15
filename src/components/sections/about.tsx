@@ -1,12 +1,15 @@
 "use client";
 
-import UofTLogo from "@/components/icons/utoronto";
 import { motion } from "motion/react";
 import Image from "next/image";
+import UofTLogo from "@/components/icons/utoronto";
 
 export default function About() {
   return (
-    <section id="about" className="relative min-h-screen flex items-center justify-center px-6 py-20">
+    <section
+      id="about"
+      className="relative min-h-screen flex items-center justify-center px-6 py-20"
+    >
       <div className="max-w-6xl w-full">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           {/* Left: Text Content */}
@@ -32,18 +35,25 @@ export default function About() {
             >
               {/* Description */}
               <p className="text-muted-foreground text-lg md:text-xl">
-                As a full-stack software engineer, I’m passionate about building impactful and meaningful projects that make a difference.
-                I actively seek out new learning experiences and enjoy competing in hackathons—having won three out of the five I’ve participated in.
-                Beyond software, I have a strong interest in designing and building hardware, from PCBs to robotics systems.
+                As a full-stack software engineer, I’m passionate about building
+                impactful and meaningful projects that make a difference. I
+                actively seek out new learning experiences and enjoy competing
+                in hackathons—having won three out of the five I’ve participated
+                in. Beyond software, I have a strong interest in designing and
+                building hardware, from PCBs to robotics systems.
               </p>
 
               {/* Education */}
-              <h3 className="text-2xl font-bold text-primary font-mono mb-4">Education</h3>
+              <h3 className="text-2xl font-bold text-primary font-mono mb-4">
+                Education
+              </h3>
               <div className="flex flex-row items-center">
                 <UofTLogo className="size-15" />
                 <div>
                   <p className="text-muted-foreground">
-                    <span className="font-semibold text-foreground">University of Toronto</span>
+                    <span className="font-semibold text-foreground">
+                      University of Toronto
+                    </span>
                     <br />
                     Mathematics Major
                   </p>
@@ -52,19 +62,27 @@ export default function About() {
 
               {/* Interests */}
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-primary font-mono">Interests</h3>
+                <h3 className="text-2xl font-bold text-primary font-mono">
+                  Interests
+                </h3>
                 <ul className="space-y-2">
                   <li className="flex items-start">
                     <span className="text-primary mr-2">▸</span>
-                    <span className="text-muted-foreground">Building impactful software projects</span>
+                    <span className="text-muted-foreground">
+                      Building impactful software projects
+                    </span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-primary mr-2">▸</span>
-                    <span className="text-muted-foreground">Hackathons & competitive programming</span>
+                    <span className="text-muted-foreground">
+                      Hackathons & competitive programming
+                    </span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-primary mr-2">▸</span>
-                    <span className="text-muted-foreground">Robotics & hardware design</span>
+                    <span className="text-muted-foreground">
+                      Robotics & hardware design
+                    </span>
                   </li>
                 </ul>
               </div>

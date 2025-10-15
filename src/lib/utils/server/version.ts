@@ -1,5 +1,3 @@
-
-
 let cachedVersionString: string | null = null;
 let cachedUrl: string | null = null;
 
@@ -53,8 +51,8 @@ export async function getVersionString(): Promise<{
     let shortCommit = "";
     let branchName = "";
     try {
-      const execSync = await import("child_process").then(
-        (mod) => mod.execSync
+      const execSync = await import("node:child_process").then(
+        (mod) => mod.execSync,
       );
       shortCommit = execSync("git rev-parse HEAD").toString().trim();
       branchName = execSync("git rev-parse --abbrev-ref HEAD")
@@ -63,9 +61,9 @@ export async function getVersionString(): Promise<{
       const remoteUrl = execSync("git config --get remote.origin.url");
       if (remoteUrl) {
         // check if github
-        const match = /github\.com\/([^\/]+)\/([^\/]+)(\.git)?.*/.exec(remoteUrl
-          .toString()
-          .trim());
+        const match = /github\.com\/([^/]+)\/([^/]+)(\.git)?.*/.exec(
+          remoteUrl.toString().trim(),
+        );
         let cleanUrl = remoteUrl.toString().trim();
         if (cleanUrl.endsWith("/")) {
           cleanUrl = cleanUrl.slice(0, -1);

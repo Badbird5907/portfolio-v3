@@ -1,10 +1,10 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import SideLocation from "./cool/location";
 import SideTime from "./cool/time";
 import SideWeather, { useWeatherReady } from "./cool/weather";
-import SideLocation from "./cool/location";
 
 interface SideRightProps {
   isMobile?: boolean;
@@ -26,7 +26,13 @@ export default function SideRight({ isMobile = false }: SideRightProps) {
   }, [totalViews]);
 
   return (
-    <div className={isMobile ? "flex flex-col items-center gap-6" : "fixed right-6 bottom-0 hidden lg:flex flex-col items-center gap-6 z-10"}>
+    <div
+      className={
+        isMobile
+          ? "flex flex-col items-center gap-6"
+          : "fixed right-6 bottom-0 hidden lg:flex flex-col items-center gap-6 z-10"
+      }
+    >
       <AnimatePresence mode="wait">
         {currentView === 0 && (
           <motion.div
@@ -40,8 +46,8 @@ export default function SideRight({ isMobile = false }: SideRightProps) {
             <SideTime isMobile={isMobile} />
           </motion.div>
         )}
-        {currentView === 1 && (
-          weatherReady ? (
+        {currentView === 1 &&
+          (weatherReady ? (
             <motion.div
               key="weather"
               initial={{ opacity: 0 }}
@@ -63,8 +69,7 @@ export default function SideRight({ isMobile = false }: SideRightProps) {
             >
               <SideLocation isMobile={isMobile} />
             </motion.div>
-          )
-        )}
+          ))}
         {currentView === 2 && (
           <motion.div
             key="location"

@@ -1,5 +1,8 @@
-import * as React from "react"
-const UofTLogo = (props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) => (
+import type * as React from "react";
+
+const UofTLogo = (
+  props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>,
+) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
@@ -159,5 +162,5 @@ const UofTLogo = (props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGEl
       transform="matrix(2 0 0 2 20.836 -25.757)"
     />
   </svg>
-)
-export default UofTLogo
+);
+export default UofTLogo;

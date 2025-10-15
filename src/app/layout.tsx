@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Providers } from "@/components/providers";
-import Cursor from "@/components/cursor";
-import Navbar from "@/components/nav";
-import Footer from "@/components/footer";
 import { Analytics } from "@vercel/analytics/next";
+import Cursor from "@/components/cursor";
+import Footer from "@/components/footer";
+import Navbar from "@/components/nav";
+import { Providers } from "@/components/providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +29,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`font-sans ${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`font-sans ${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <Providers>
           <Navbar />
           {children}
