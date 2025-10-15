@@ -39,9 +39,13 @@ async function getWeatherData() {
 
   const utcOffsetSeconds = response.utcOffsetSeconds();
 
-  const current = response.current()!;
-  const hourly = response.hourly()!;
-  const daily = response.daily()!;
+  const current = response.current();
+  const hourly = response.hourly();
+  const daily = response.daily();
+
+  if (!current || !hourly || !daily) {
+    throw new Error("Failed to fetch weather data");
+  }
 
   // Fetch sunrise/sunset separately since they're ISO8601 strings, not numeric values
   const sunTimesUrl = `${url}?latitude=${weatherParams.latitude[0]}&longitude=${weatherParams.longitude[0]}&daily=sunrise,sunset&timezone=${weatherParams.timezone}`;
@@ -51,11 +55,11 @@ async function getWeatherData() {
   const weatherData = {
     current: {
       time: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
-      temperature: current.variables(0)?.value(), // Current is only 1 value, therefore `.value()`
-      temperatureF: convertToFreedomUnits(current.variables(0)?.value()),
-      weatherCode: current.variables(1)?.value(),
-      windSpeed: current.variables(2)?.value(),
-      windDirection: current.variables(3)?.value(),
+      temperature: current.variables(0)?.value() ?? 0, // Default to 0 if undefined
+      temperatureF: convertToFreedomUnits(current.variables(0)?.value() ?? 0),
+      weatherCode: current.variables(1)?.value() ?? null,
+      windSpeed: current.variables(2)?.value() ?? 0,
+      windDirection: current.variables(3)?.value() ?? 0,
     },
     hourly: {
       time: range(
@@ -63,8 +67,8 @@ async function getWeatherData() {
         Number(hourly.timeEnd()),
         hourly.interval(),
       ).map((t) => new Date((t + utcOffsetSeconds) * 1000)),
-      temperature: hourly.variables(0)?.valuesArray()!, // `.valuesArray()` get an array of floats
-      humidity: hourly.variables(1)?.valuesArray()!,
+      temperature: hourly.variables(0)?.valuesArray() || [], // `.valuesArray()` get an array of floats
+      humidity: hourly.variables(1)?.valuesArray() || [],
     },
     daily: {
       time: range(
@@ -72,9 +76,9 @@ async function getWeatherData() {
         Number(daily.timeEnd()),
         daily.interval(),
       ).map((t) => new Date((t + utcOffsetSeconds) * 1000)),
-      weatherCode: daily.variables(0)?.valuesArray()!,
-      temperatureMax: daily.variables(1)?.valuesArray()!,
-      temperatureMin: daily.variables(2)?.valuesArray()!,
+      weatherCode: daily.variables(0)?.valuesArray() || [],
+      temperatureMax: daily.variables(1)?.valuesArray() || [],
+      temperatureMin: daily.variables(2)?.valuesArray() || [],
       sunrise: sunTimesData.daily.sunrise as string[],
       sunset: sunTimesData.daily.sunset as string[],
     },
@@ -98,7 +102,7 @@ interface SideWeatherProps {
 }
 
 export const SideWeather = ({ isMobile = false }: SideWeatherProps) => {
-  const { data, isLoading, error } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ["weather"],
     queryFn: getWeatherData,
     refetchInterval: 5 * 60 * 1000,
@@ -111,10 +115,6 @@ export const SideWeather = ({ isMobile = false }: SideWeatherProps) => {
     // check if the user's browser location is in the United States (literally the only fucking country that uses Fahrenheit)
     return country === "US";
   }, [country]);
-
-  if (error) {
-    return null;
-  }
 
   const weatherIcon = useMemo(() => {
     /*
@@ -141,7 +141,7 @@ export const SideWeather = ({ isMobile = false }: SideWeatherProps) => {
     const isNight =
       sunrise && sunset ? currentTime < sunrise || currentTime > sunset : false; // default to day if no sunrise/sunset data
 
-    const code = data.current.weatherCode;
+    const code = data.current.weatherCode ?? 0;
     if (code === 0)
       return isNight ? (
         <Moon className={classes} />
@@ -168,10 +168,14 @@ export const SideWeather = ({ isMobile = false }: SideWeatherProps) => {
   }, [
     data?.current.weatherCode,
     isMobile,
-    data.current.time,
-    data.daily.sunrise[0],
+    data?.current.time,
+    data?.daily.sunrise[0],
     data,
   ]);
+
+  if (error) {
+    return null;
+  }
 
   if (!data) return null; // Data will load while other views are shown
 
