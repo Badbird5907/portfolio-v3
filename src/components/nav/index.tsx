@@ -3,31 +3,41 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
-const navItems = [
-  {
-    name: "Home",
-    href: "/#hero",
-  },
-  {
-    name: "About",
-    href: "/#about",
-  },
-  {
-    name: "Work",
-    href: "/#work",
-  },
-] as const;
+export type NavItem = {
+  name: string;
+  href: string;
+  alt?: boolean;
+};
+
+const landingNavItems = [
+  { name: "Home", href: "/#hero" },
+  { name: "About", href: "/#about" },
+  { name: "Work", href: "/#work" },
+  { name: "Blog", href: "/blog", alt: true },
+] as NavItem[];
+
+const blogNavItems = [
+  { name: "Home", href: "/" },
+  { name: "Blog", href: "/blog" },
+] as NavItem[];
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [activeSection, setActiveSection] = useState("hero");
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
   const navBackground = useTransform(
     scrollY,
     [0, 100],
-    ["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0.25)"],
+    ["rgba(0, 0, 0, 0.1)", "rgba(0, 0, 0, 0.25)"],
   );
+
+  // Determine which nav items to show based on current route
+  const isBlogRoute = pathname.startsWith("/blog");
+  const navItems = isBlogRoute ? blogNavItems as NavItem[] : landingNavItems as NavItem[];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,13 +61,13 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [navItems]);
 
   return (
     <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
       className="fixed top-0 left-0 right-0 z-50"
     >
       <motion.div
@@ -87,7 +97,22 @@ export default function Navbar() {
               className="flex items-center gap-1 md:gap-2"
             >
               {navItems.map((item, index) => {
-                const isActive = activeSection === item.href.replace("/#", "");
+                // Check if this is a hash link (landing page sections) or path link (blog)
+                const isHashLink = item.href.startsWith("/#");
+                let isActive = false;
+                
+                if (isHashLink) {
+                  // For hash links, check if section is in view
+                  isActive = activeSection === item.href.replace("/#", "");
+                } else {
+                  // For path links, check if pathname matches
+                  if (item.href === "/") {
+                    isActive = pathname === "/";
+                  } else {
+                    isActive = pathname.startsWith(item.href);
+                  }
+                }
+                
                 return (
                   <motion.div
                     key={item.name}
@@ -97,17 +122,22 @@ export default function Navbar() {
                   >
                     <Link
                       href={item.href}
-                      className={`relative px-4 py-2 text-sm md:text-base font-medium transition-colors duration-300 rounded-lg group ${
+                      className={cn(
+                        "relative px-4 py-2 text-sm md:text-base font-medium transition-colors duration-300 rounded-lg group",
                         isActive
                           ? "text-primary"
-                          : "text-foreground/70 hover:text-foreground"
-                      }`}
+                          : "text-foreground/70 hover:text-foreground",
+                        item.alt ? "border border-secondary" : ""
+                      )}
                       onClick={(e) => {
-                        const selector = item.href.replace("/#", "#");
-                        const target = document.querySelector(selector);
-                        if (target) {
-                          e.preventDefault();
-                          target.scrollIntoView({ behavior: "smooth" });
+                        // Only handle smooth scrolling for hash links
+                        if (isHashLink) {
+                          const selector = item.href.replace("/#", "#");
+                          const target = document.querySelector(selector);
+                          if (target) {
+                            e.preventDefault();
+                            target.scrollIntoView({ behavior: "smooth" });
+                          }
                         }
                       }}
                     >
@@ -117,7 +147,7 @@ export default function Navbar() {
 
                       {isActive && (
                         <motion.span
-                          layoutId="activeSection"
+                          layoutId={`activeSection-${isBlogRoute ? 'blog' : 'landing'}`}
                           className="absolute inset-0 bg-primary/20 rounded-lg"
                           transition={{
                             type: "spring",

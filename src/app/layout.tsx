@@ -4,8 +4,8 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import Cursor from "@/components/cursor";
 import Footer from "@/components/footer";
-import Navbar from "@/components/nav";
 import { Providers } from "@/components/providers";
+import Navbar from "@/components/nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
