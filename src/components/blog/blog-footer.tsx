@@ -89,7 +89,7 @@ export default function BlogFooter({ slug }: BlogFooterProps) {
             repoId={env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ""}
             category="General"
             categoryId={env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? ""}
-            mapping="pathname"
+            mapping="title"
             strict="0"
             reactionsEnabled="1"
             emitMetadata="0"
