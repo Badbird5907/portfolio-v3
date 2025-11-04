@@ -4,6 +4,8 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { allPosts } from "content-collections";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import Giscus from "@giscus/react";
+import { env } from "@/env";
 
 interface BlogFooterProps {
   slug: string;
@@ -23,7 +25,7 @@ export default function BlogFooter({ slug }: BlogFooterProps) {
       transition={{ duration: 0.6, delay: 0.6 }}
       className="mt-16 pt-8 border-t border-border"
     >
-      <nav className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+      {/* <nav className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
         {prevPost ? (
           <Link
             href={`/blog/${prevPost._meta.path}`}
@@ -73,12 +75,36 @@ export default function BlogFooter({ slug }: BlogFooterProps) {
             </h3>
           </div>
         )}
-      </nav>
+      </nav> */}
 
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.7 }}
+        transition={{ duration: 0.6, delay: 0.8 }}
+        className="mb-12"
+      >
+        {env.NEXT_PUBLIC_GISCUS_REPO && (
+          <Giscus
+            repo={env.NEXT_PUBLIC_GISCUS_REPO as `${string}/${string}`}
+            repoId={env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ""}
+            category="General"
+            categoryId={env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? ""}
+            mapping="pathname"
+            strict="0"
+            reactionsEnabled="1"
+            emitMetadata="0"
+            inputPosition="top"
+            theme="transparent_dark"
+            lang="en"
+            loading="lazy"
+          />
+        )}
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.9 }}
         className="text-center"
       >
         <Link

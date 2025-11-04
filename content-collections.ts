@@ -28,8 +28,6 @@ const posts = defineCollection({
   },
 });
 
-console.dir(posts);
-
 export default defineConfig({
   collections: [posts],
 });
