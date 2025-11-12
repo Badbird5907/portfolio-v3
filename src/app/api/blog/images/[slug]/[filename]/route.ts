@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFile } from "fs/promises";
+import { createReadStream } from "fs";
 import { join } from "path";
+import { stat } from "fs/promises";
+import { Readable } from "stream";
 
 export async function GET(
   request: NextRequest,
@@ -12,8 +14,8 @@ export async function GET(
     // Construct the path to the image in the content directory
     const imagePath = join(process.cwd(), "content", "posts", slug, filename);
     
-    // Read the image file
-    const imageBuffer = await readFile(imagePath);
+    // Check if file exists and get its stats
+    const stats = await stat(imagePath);
     
     // Determine content type based on file extension
     const ext = filename.split(".").pop()?.toLowerCase();
@@ -25,10 +27,15 @@ export async function GET(
       ext === "svg" ? "image/svg+xml" :
       "application/octet-stream";
     
-    // Return the image with appropriate headers
-    return new NextResponse(imageBuffer.toString("base64"), {
+    // Create a readable stream from the file and convert to Web Stream
+    const fileStream = createReadStream(imagePath);
+    const webStream = Readable.toWeb(fileStream) as ReadableStream<Uint8Array>;
+    
+    // Return the streamed image with appropriate headers
+    return new NextResponse(webStream, {
       headers: {
         "Content-Type": contentType,
+        "Content-Length": stats.size.toString(),
         "Cache-Control": "public, max-age=31536000, immutable",
       },
     });
