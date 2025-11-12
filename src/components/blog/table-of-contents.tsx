@@ -79,7 +79,7 @@ export default function TableOfContents() {
       transition={{ duration: 0.5, delay: 0.3 }}
       className="hidden xl:block fixed right-8 top-32 w-64 max-h-[calc(100vh-200px)] overflow-y-auto z-30"
     >
-      <div className="bg-background/50 backdrop-blur-sm rounded-lg p-6 shadow-lg">
+      <div className="bg-background/50 ">
         <h3 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wider">
           On This Page
         </h3>

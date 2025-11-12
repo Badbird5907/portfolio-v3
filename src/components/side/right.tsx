@@ -11,7 +11,6 @@ interface SideRightProps {
 }
 
 export default function SideRight({ isMobile = false }: SideRightProps) {
-  console.log("isMobile", isMobile);
   const [currentView, setCurrentView] = useState(2);
   const weatherReady = useWeatherReady();
 

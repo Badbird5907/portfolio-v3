@@ -194,6 +194,10 @@
 }
 
 a {
+  @apply text-primary hover:text-primary transition-all duration-300;
+}
+
+footer a {
   @apply text-muted-foreground hover:text-primary transition-all duration-300;
 }
 

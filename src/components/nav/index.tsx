@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +28,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const [activeSection, setActiveSection] = useState("hero");
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
   const { scrollY } = useScroll();
   const navBackground = useTransform(
     scrollY,
@@ -36,12 +38,36 @@ export default function Navbar() {
   );
 
   // Determine which nav items to show based on current route
-  const isBlogRoute = pathname.startsWith("/blog");
-  const navItems = isBlogRoute ? blogNavItems as NavItem[] : landingNavItems as NavItem[];
+  const isBlogPost = pathname.startsWith("/blog/"); // specifically match for /blog/slug
+  const isBlogSection = pathname.startsWith("/blog"); // specifically match for /blog
+  const navItems = isBlogSection ? blogNavItems as NavItem[] : landingNavItems as NavItem[];
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      const currentScrollY = window.scrollY;
+      setIsScrolled(currentScrollY > 50);
+
+      // Only apply scroll-based hide/show on blog routes
+      if (isBlogPost) {
+        // Show navbar when scrolling up, hide when scrolling down
+        if (currentScrollY < lastScrollY.current) {
+          // Scrolling up
+          setIsVisible(true);
+        } else if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+          // Scrolling down and past threshold
+          setIsVisible(false);
+        }
+        
+        // Always show navbar at the top
+        if (currentScrollY < 10) {
+          setIsVisible(true);
+        }
+      } else {
+        // Always visible on landing page
+        setIsVisible(true);
+      }
+
+      lastScrollY.current = currentScrollY;
 
       const sections = navItems
         .filter((item) => item.href.startsWith("/#"))
@@ -59,15 +85,21 @@ export default function Navbar() {
 
     handleScroll(); // update on page load
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [navItems]);
+  }, [navItems, isBlogPost]);
 
   return (
     <motion.nav
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+      initial={{ opacity: 0, y: -100 }}
+      animate={{ 
+        opacity: 1, 
+        y: isBlogPost ? (isVisible ? 0 : -100) : 0
+      }}
+      transition={{ 
+        duration: 0.3, 
+        ease: "easeInOut" 
+      }}
       className="fixed top-0 left-0 right-0 z-50"
     >
       <motion.div
@@ -147,7 +179,7 @@ export default function Navbar() {
 
                       {isActive && (
                         <motion.span
-                          layoutId={`activeSection-${isBlogRoute ? 'blog' : 'landing'}`}
+                          layoutId={`activeSection-${isBlogPost ? 'blog' : 'landing'}`}
                           className="absolute inset-0 bg-primary/20 rounded-lg"
                           transition={{
                             type: "spring",

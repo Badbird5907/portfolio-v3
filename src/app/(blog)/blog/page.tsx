@@ -25,10 +25,10 @@ export default function BlogPage() {
         <div className="space-y-8">
           {sortedPosts.map((post) => (
             <article
-              key={post._meta.path}
+              key={post._meta.directory}
               className="group relative border border-border/50 rounded-lg p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
             >
-              <Link href={`/blog/${post._meta.path}`} className="block">
+              <Link href={`/blog/${post._meta.directory}`} className="block">
                 <div className="flex flex-col gap-2">
                   <time className="text-sm text-foreground/60">
                     {new Date(post.date).toLocaleDateString("en-US", {

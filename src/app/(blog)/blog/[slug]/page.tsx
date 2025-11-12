@@ -7,6 +7,7 @@ import BlogContent from "@/components/blog/blog-content";
 import BlogFooter from "@/components/blog/blog-footer";
 import ReadingProgress from "@/components/blog/reading-progress";
 import TableOfContents from "@/components/blog/table-of-contents";
+import { createMDXImageComponent } from "@/components/blog/mdx-image";
 
 type BlogPostPageProps = {
   params: Promise<{
@@ -24,7 +25,9 @@ export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = allPosts.find((post) => post._meta.path === slug);
+  const post = allPosts.find((post) => {
+    return post._meta.filePath === slug
+  });
 
   if (!post) {
     return {
@@ -47,8 +50,10 @@ export async function generateMetadata({
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const post = allPosts.find((post) => post._meta.path === slug);
-
+  const post = allPosts.find((post) => {
+    const { fileName } = post._meta;
+    return fileName.substring(0, fileName.length - 4) === slug
+  })
   if (!post) {
     notFound();
   }
@@ -69,7 +74,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             />
 
             <BlogContent>
-              <MDXContent code={post.mdx} />
+              <MDXContent 
+                code={post.mdx} 
+                components={{
+                  img: createMDXImageComponent(slug),
+                  h1: ({ children, ...props }) => <h1 className="border-b border-border/50 pb-2" {...props}>{children}</h1>,
+                  h2: ({ children, ...props }) => <h2 className="border-b border-border/50 pb-2" {...props}>{children}</h2>,
+                }}
+              />
             </BlogContent>
 
             <BlogFooter slug={post._meta.path} />

@@ -20,6 +20,9 @@ const posts = defineCollection({
   transform: async (document, context) => {
     const mdx = await compileMDX(context, document);
     const readingTimeResult = readingTime(document.content);
+    if (document._meta.directory !== document._meta.fileName.substring(0, document._meta.fileName.length - 4)) { // strip .mdx
+      throw new Error(`Path ${document._meta.path} does not match file name ${document._meta.fileName} (rename to ${document._meta.path}.mdx)`);
+    }
     return {
       ...document,
       mdx,
