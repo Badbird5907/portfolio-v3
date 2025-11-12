@@ -26,13 +26,12 @@ export async function generateMetadata({
 }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = allPosts.find((post) => {
-    return post._meta.filePath === slug
-  });
+    const { fileName } = post._meta;
+    return fileName.substring(0, fileName.length - 4) === slug
+  })
 
   if (!post) {
-    return {
-      title: "Post Not Found",
-    };
+    return notFound();
   }
 
   return {
