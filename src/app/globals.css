@@ -223,3 +223,49 @@ footer a {
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--primary) / 0.3);
 }
+
+/* Syntax Highlighting */
+figure[data-rehype-pretty-code-figure] {
+  @apply my-4 overflow-hidden rounded-lg border border-border bg-muted/50;
+}
+
+figure[data-rehype-pretty-code-figure] pre {
+  @apply overflow-x-auto py-4 px-4 text-sm leading-relaxed;
+}
+
+figure[data-rehype-pretty-code-figure] code {
+  @apply grid min-w-full break-words rounded-none border-0 bg-transparent p-0 text-sm text-current;
+  counter-reset: line;
+  box-decoration-break: clone;
+}
+
+figure[data-rehype-pretty-code-figure] [data-line] {
+  @apply px-4 border-l-2 border-transparent;
+}
+
+figure[data-rehype-pretty-code-figure] [data-highlighted-line] {
+  @apply bg-primary/10 border-l-primary;
+}
+
+figure[data-rehype-pretty-code-figure] [data-highlighted-chars],
+figure[data-rehype-pretty-code-figure] mark {
+  @apply rounded px-0.75 py-0.5 border border-border/50;
+  background-color: hsl(232, 7%, 24%); /* Ensure it overrides mark yellow */
+  color: inherit;
+}
+
+figure[data-rehype-pretty-code-figure] [data-chars-id] {
+  @apply border-b-2 border-primary bg-primary/10 pb-0.5;
+}
+
+code[data-theme*=" "],
+code[data-theme*=" "] span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+
+.dark code[data-theme*=" "],
+.dark code[data-theme*=" "] span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+}
