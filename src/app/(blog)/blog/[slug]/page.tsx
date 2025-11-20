@@ -16,7 +16,7 @@ type BlogPostPageProps = {
 
 export async function generateStaticParams() {
   return allPosts.map((post) => ({
-    slug: post._meta.path,
+    slug: post._meta.fileName.substring(0, post._meta.fileName.length - 4)
   }));
 }
 
