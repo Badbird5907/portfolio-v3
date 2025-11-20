@@ -1,13 +1,12 @@
 import { allPosts } from "content-collections";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { MDXContent } from "@content-collections/mdx/react";
 import BlogHeader from "@/components/blog/blog-header";
 import BlogContent from "@/components/blog/blog-content";
 import BlogFooter from "@/components/blog/blog-footer";
 import ReadingProgress from "@/components/blog/reading-progress";
 import TableOfContents from "@/components/blog/table-of-contents";
-import { createMDXImageComponent } from "@/components/blog/mdx-image";
+import BlogMDXContent from "./content";
 
 type BlogPostPageProps = {
   params: Promise<{
@@ -73,13 +72,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             />
 
             <BlogContent>
-              <MDXContent 
-                code={post.mdx} 
-                components={{
-                  img: createMDXImageComponent(slug),
-                  h1: ({ children, ...props }) => <h1 className="border-b border-border/50 pb-2" {...props}>{children}</h1>,
-                  h2: ({ children, ...props }) => <h2 className="border-b border-border/50 pb-2" {...props}>{children}</h2>,
-                }}
+              <BlogMDXContent
+                code={post.mdx}
+                slug={post._meta.directory}
               />
             </BlogContent>
 

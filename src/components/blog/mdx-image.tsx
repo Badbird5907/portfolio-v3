@@ -8,7 +8,7 @@ interface MDXImageProps extends Omit<React.ComponentProps<typeof Image>, "src" |
 
 export function createMDXImageComponent(slug: string) {
   return function MDXImage({ src, alt, className, width, height, ...props }: MDXImageProps) {
-    const containerClassName = `rounded-lg my-8 shadow-lg max-w-full overflow-hidden ${className || ""}`;
+    const containerClassName = `rounded-lg my-8 max-w-full overflow-hidden ${className || ""}`;
     
     // Handle @ prefix - treat it as a relative path to the post's image directory
     if (src.startsWith("@")) {
@@ -23,7 +23,7 @@ export function createMDXImageComponent(slug: string) {
             alt={alt || ""}
             width={width}
             height={height}
-            className={containerClassName}
+            className={`${containerClassName} shadow-lg`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
             {...props}
           />
@@ -31,13 +31,12 @@ export function createMDXImageComponent(slug: string) {
       }
       
       return (
-        <span className={`relative block w-full ${containerClassName}`} style={{ aspectRatio: "16/9", minHeight: "200px", display: "block" }}>
-          <Image
+        <span className={`relative block w-full ${containerClassName}`} style={{ display: "block" }}>
+          <img
             src={imageSrc}
             alt={alt || ""}
-            fill
-            className="object-contain"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+            className="w-full h-auto object-contain rounded-lg shadow-lg"
+            loading="lazy"
             {...props}
           />
         </span>
@@ -52,7 +51,7 @@ export function createMDXImageComponent(slug: string) {
           alt={alt || ""}
           width={width}
           height={height}
-          className={containerClassName}
+          className={`${containerClassName} shadow-lg`}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
           {...props}
         />
@@ -60,13 +59,12 @@ export function createMDXImageComponent(slug: string) {
     }
     
     return (
-      <span className={`relative block w-full ${containerClassName}`} style={{ aspectRatio: "16/9", minHeight: "200px", display: "block" }}>
-        <Image
+      <span className={`relative block w-full ${containerClassName}`} style={{ display: "block" }}>
+        <img
           src={src}
           alt={alt || ""}
-          fill
-          className="object-contain"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+          className="w-full h-auto object-contain rounded-lg shadow-lg"
+          loading="lazy"
           {...props}
         />
       </span>
