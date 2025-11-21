@@ -15,28 +15,28 @@ export default function BlogContent({ children }: BlogContentProps) {
       transition={{ duration: 0.6, delay: 0.5 }}
       id="blog-content"
       className={cn(
-        "prose prose-lg prose-invert max-w-none",
+        "prose prose-lg prose-invert max-w-none break-words",
         // Headings
         "prose-headings:font-bold prose-headings:tracking-tight",
         "prose-h1:text-4xl prose-h1:md:text-5xl prose-h1:mb-6 prose-h1:mt-8 prose-h1:first:mt-0",
         "prose-h2:text-3xl prose-h2:md:text-4xl prose-h2:mb-4 prose-h2:mt-8",
         "prose-h3:text-2xl prose-h3:md:text-3xl prose-h3:mb-3 prose-h3:mt-6",
         // Paragraphs
-        "prose-p:mb-4 prose-p:leading-relaxed prose-p:text-foreground/90",
+        "prose-p:mb-4 prose-p:leading-relaxed prose-p:text-foreground/90 prose-p:break-words",
         // Links
-        "prose-a:text-foreground prose-a:no-underline hover:prose-a:underline prose-a:transition-all",
+        "prose-a:text-foreground prose-a:no-underline hover:prose-a:underline prose-a:transition-all prose-a:break-all",
         // Text formatting
         "prose-strong:text-foreground prose-strong:font-bold",
         // Code
-        "prose-code:text-primary prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-code:before:content-none prose-code:after:content-none",
+        "prose-code:text-primary prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-code:break-all",
         // Code blocks
-        "prose-pre:bg-muted prose-pre:border prose-pre:border-border prose-pre:rounded-lg prose-pre:p-4",
+        "prose-pre:bg-muted prose-pre:border prose-pre:border-border prose-pre:rounded-lg prose-pre:p-4 prose-pre:overflow-x-auto",
         // Blockquotes
-        "prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-muted-foreground",
+        "prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-muted-foreground prose-blockquote:break-words",
         // Lists
         "prose-ul:list-disc prose-ul:mb-4 prose-ul:space-y-2",
         "prose-ol:list-decimal prose-ol:mb-4 prose-ol:space-y-2",
-        "prose-li:ml-4 prose-li:text-foreground/90",
+        "prose-li:ml-4 prose-li:text-foreground/90 prose-li:break-words",
         // Images
         "prose-img:rounded-lg prose-img:my-8 prose-img:shadow-lg",
         // Horizontal rules

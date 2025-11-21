@@ -1,10 +1,11 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { Menu, X } from "lucide-react";
 
 export type NavItem = {
   name: string;
@@ -21,14 +22,16 @@ const landingNavItems = [
 
 const blogNavItems = [
   { name: "Home", href: "/" },
-  { name: "Blog", href: "/blog" },
+  { name: "Blog", href: "/blog", alt: true },
 ] as NavItem[];
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [activeSection, setActiveSection] = useState("hero");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const lastScrollY = useRef(0);
   const { scrollY } = useScroll();
   const navBackground = useTransform(
@@ -94,7 +97,7 @@ export default function Navbar() {
       initial={{ opacity: 0, y: -100 }}
       animate={{ 
         opacity: 1, 
-        y: isBlogPost ? (isVisible ? 0 : -100) : 0
+        y: isBlogPost && !isMobileMenuOpen ? (isVisible ? 0 : -100) : 0
       }}
       transition={{ 
         duration: 0.3, 
@@ -105,7 +108,7 @@ export default function Navbar() {
       <motion.div
         style={{ backgroundColor: navBackground }}
         className={`backdrop-blur-md transition-shadow duration-300 ${
-          isScrolled ? "shadow-lg border-b border-border/50" : ""
+          isScrolled || isMobileMenuOpen ? "shadow-lg border-b border-border/50" : ""
         }`}
       >
         <div className="max-w-6xl mx-auto px-6 py-4">
@@ -122,11 +125,12 @@ export default function Navbar() {
               </Link>
             </motion.div>
 
+            {/* Desktop Navigation */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex items-center gap-1 md:gap-2"
+              className="hidden md:flex items-center gap-1 md:gap-2"
             >
               {navItems.map((item, index) => {
                 // Check if this is a hash link (landing page sections) or path link (blog)
@@ -193,8 +197,107 @@ export default function Navbar() {
                 );
               })}
             </motion.div>
+
+            {/* Mobile Menu Toggle */}
+            <div className="md:hidden flex items-center">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="text-foreground p-2 focus:outline-none"
+                aria-label="Toggle menu"
+              >
+                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="md:hidden overflow-hidden bg-background/95 backdrop-blur-md border-t border-border/50"
+            >
+              <div className="px-6 py-4 space-y-4">
+                {/* Horizontal Links (Home, About, Work) */}
+                <div className="flex items-center justify-center gap-4">
+                  {navItems
+                    .filter((item) => !item.alt)
+                    .map((item) => {
+                      const isHashLink = item.href.startsWith("/#");
+                      let isActive = false;
+                      if (isHashLink) {
+                        isActive = activeSection === item.href.replace("/#", "");
+                      } else {
+                        if (item.href === "/") {
+                          isActive = pathname === "/";
+                        } else {
+                          isActive = pathname.startsWith(item.href);
+                        }
+                      }
+
+                      return (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className={cn(
+                            "text-base font-medium transition-colors duration-300",
+                            isActive
+                              ? "text-primary"
+                              : "text-foreground/70 hover:text-foreground"
+                          )}
+                          onClick={async (e) => {
+                            setIsMobileMenuOpen(false);
+                            if (isHashLink) {
+                              const sectionId = item.href.replace("/#", "");
+                              const element = document.getElementById(sectionId);
+                              
+                              if (element) {
+                                e.preventDefault();
+                                await new Promise(resolve => setTimeout(resolve, 100));
+                                element.scrollIntoView({ behavior: "smooth" });
+                              }
+                            }
+                          }}
+                        >
+                          {item.name}
+                        </Link>
+                      );
+                    })}
+                </div>
+
+                {/* Separate Line Items (Blog) */}
+                <div className="flex flex-col space-y-2">
+                  {navItems
+                    .filter((item) => item.alt)
+                    .map((item) => {
+                       // Logic duplicated for now, can be refactored if complex
+                       const isActive = pathname.startsWith(item.href);
+                       
+                       return (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className={cn(
+                            "block px-4 py-3 text-base font-medium transition-colors duration-300 rounded-lg text-center border border-secondary",
+                            isActive
+                              ? "bg-primary/10 text-primary"
+                              : "text-foreground/70 hover:text-foreground hover:bg-primary/5"
+                          )}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {item.name}
+                        </Link>
+                       );
+                    })}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </motion.nav>
   );
