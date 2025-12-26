@@ -6,19 +6,22 @@ import { Readable } from "stream";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string; filename: string }> }
+  { params }: { params: Promise<{ slug: string; filename: string[] }> }
 ) {
   try {
     const { slug, filename } = await params;
     
+    // Join the filename array to support nested paths (e.g., demos/image.png)
+    const filePath = filename.join("/");
+    
     // Construct the path to the image in the content directory
-    const imagePath = join(process.cwd(), "content", "posts", slug, filename);
+    const imagePath = join(process.cwd(), "content", "posts", slug, filePath);
     
     // Check if file exists and get its stats
     const stats = await stat(imagePath);
     
     // Determine content type based on file extension
-    const ext = filename.split(".").pop()?.toLowerCase();
+    const ext = filePath.split(".").pop()?.toLowerCase();
     const contentType = 
       ext === "png" ? "image/png" :
       ext === "jpg" || ext === "jpeg" ? "image/jpeg" :
@@ -44,4 +47,3 @@ export async function GET(
     return new NextResponse("Image not found", { status: 404 });
   }
 }
-

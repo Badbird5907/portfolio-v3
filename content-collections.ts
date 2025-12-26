@@ -16,6 +16,7 @@ const posts = defineCollection({
     summary: z.string(),
     date: z.coerce.date(),
     author: z.string(),
+    banner: z.string().optional(),
     // readingTime: z.string(),
   }),
   transform: async (document, context) => {

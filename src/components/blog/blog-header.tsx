@@ -2,12 +2,17 @@
 
 import { Calendar, Clock, Dot, User } from "lucide-react";
 import { motion } from "motion/react";
+import Image from "next/image";
+import { BlogImage } from "./mdx-image";
+
 interface BlogHeaderProps {
   title: string;
   date: Date;
   author: string;
   summary: string;
   readingTime: string;
+  banner?: string;
+  slug?: string;
 }
 
 export default function BlogHeader({
@@ -16,6 +21,8 @@ export default function BlogHeader({
   author,
   summary,
   readingTime,
+  banner,
+  slug,
 }: BlogHeaderProps) {
   const formattedDate = new Intl.DateTimeFormat("en-US", {
     year: "numeric",
@@ -69,7 +76,7 @@ export default function BlogHeader({
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
+        transition={{ duration: 0.6, delay: banner ? 0.4 : 0.3 }}
         className="text-lg md:text-xl text-muted-foreground leading-relaxed border-l-4 border-primary pl-6 py-2"
       >
         {summary}
@@ -78,9 +85,26 @@ export default function BlogHeader({
       <motion.div
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
+        transition={{ duration: 0.8, delay: banner ? 0.5 : 0.4 }}
         className="mt-8 h-px bg-gradient-to-r from-transparent via-border to-transparent origin-left"
       />
+
+      {banner && slug && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="my-2 relative w-full aspect-[2/1] rounded-lg overflow-hidden"
+        >
+          <BlogImage
+            src={`/api/blog/images/${slug}/${banner}`}
+            alt={title}
+            fill
+            className="object-cover"
+            priority
+          />
+        </motion.div>
+      )}
     </motion.header>
   );
 }

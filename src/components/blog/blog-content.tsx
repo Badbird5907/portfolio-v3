@@ -38,7 +38,7 @@ export default function BlogContent({ children }: BlogContentProps) {
         "prose-ol:list-decimal prose-ol:mb-4 prose-ol:space-y-2",
         "prose-li:ml-4 prose-li:text-foreground/90 prose-li:break-words",
         // Images
-        "prose-img:rounded-lg prose-img:my-8 prose-img:shadow-lg",
+        "prose-img:rounded-lg prose-img:my-8",
         // Horizontal rules
         "prose-hr:my-8 prose-hr:border-border"
       )}

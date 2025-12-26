@@ -33,6 +33,17 @@ export async function generateMetadata({
     return notFound();
   }
 
+  const ogImage = post.banner
+    ? {
+        images: [
+          {
+            url: `/api/blog/images/${slug}/${post.banner}`,
+            alt: post.title,
+          },
+        ],
+      }
+    : {};
+
   return {
     title: `${post.title} | Evan Yu`,
     description: post.summary,
@@ -42,6 +53,7 @@ export async function generateMetadata({
       type: "article",
       publishedTime: post.date.toISOString(),
       authors: [post.author],
+      ...ogImage,
     },
   };
 }
@@ -69,6 +81,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               date={post.date}
               author={post.author}
               summary={post.summary}
+              banner={post.banner}
+              slug={post._meta.directory}
             />
 
             <BlogContent>

@@ -1,74 +1,91 @@
 import Image from "next/image";
+import { XIcon } from "lucide-react";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
-interface MDXImageProps extends Omit<React.ComponentProps<typeof Image>, "src" | "alt"> {
+interface BlogImageProps extends Omit<React.ComponentProps<typeof Image>, "src" | "alt"> {
   src: string;
   alt?: string;
   slug?: string;
+
 }
 
-export function createMDXImageComponent(slug: string) {
-  return function MDXImage({ src, alt, className, width, height, ...props }: MDXImageProps) {
-    const containerClassName = `rounded-lg my-8 max-w-full overflow-hidden ${className || ""}`;
-    
-    // Handle @ prefix - treat it as a relative path to the post's image directory
-    if (src.startsWith("@")) {
-      const filename = src.slice(1);
-      const imageSrc = `/api/blog/images/${slug}/${filename}`;
-      
-      // If width/height provided, use them; otherwise use fill with container
-      if (width && height) {
-        return (
-          <Image
-            src={imageSrc}
-            alt={alt || ""}
-            width={width}
-            height={height}
-            className={`${containerClassName} shadow-lg`}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-            {...props}
-          />
-        );
-      }
-      
-      return (
-        <span className={`relative block w-full ${containerClassName}`} style={{ display: "block" }}>
-          <img
-            src={imageSrc}
-            alt={alt || ""}
-            className="w-full h-auto object-contain rounded-lg shadow-lg"
-            loading="lazy"
-            {...props}
-          />
-        </span>
-      );
+export function BlogImage({ slug, src, alt, className, width, height, priority, fill, ...props }: BlogImageProps) {
+  const [open, setOpen] = useState(false);
+  const containerClassName = `rounded-lg my-8 max-w-full overflow-hidden ${className || ""}`;
+  
+  let imageSrc = src;
+  if (!imageSrc.startsWith("http") && !imageSrc.startsWith("/")) {
+    if (imageSrc.startsWith("@")) {
+      imageSrc = imageSrc.slice(1);
     }
+    imageSrc = `/api/blog/images/${slug}/${imageSrc}`;
+  } else {
+    imageSrc = src;
+  }
 
-    // Handle regular image paths
-    if (width && height) {
-      return (
-        <Image
-          src={src}
-          alt={alt || ""}
-          width={width}
-          height={height}
-          className={`${containerClassName} shadow-lg`}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-          {...props}
-        />
-      );
-    }
+
+  const Thumbnail = () => {
+    const imageWidth = width || 1200;
+    const imageHeight = height || 800;
     
     return (
-      <span className={`relative block w-full ${containerClassName}`} style={{ display: "block" }}>
-        <img
-          src={src}
-          alt={alt || ""}
-          className="w-full h-auto object-contain rounded-lg shadow-lg"
-          loading="lazy"
-          {...props}
-        />
-      </span>
+      <Image
+        src={imageSrc}
+        alt={alt || ""}
+        width={imageWidth}
+        height={imageHeight}
+        className={cn("cursor-zoom-in w-full h-auto", containerClassName, "shadow-lg")}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+        priority={priority}
+        loading={priority ? undefined : "lazy"}
+        {...props}
+      />
     );
   };
-}
 
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+          <button className="w-full bg-transparent border-none p-0 text-left" type="button">
+              <Thumbnail />
+          </button>
+      </DialogTrigger>
+      <DialogContent 
+          className="!fixed !inset-0 !w-screen !h-screen !transform-none !translate-x-0 !translate-y-0 !max-w-none !top-0 !left-0 !bg-transparent !border-none !shadow-none !flex !items-center !justify-center !z-50 !p-0 !gap-0"
+          showCloseButton={false}
+      >
+         <DialogTitle className="sr-only">{alt || "Image preview"}</DialogTitle>
+         
+         <button 
+              onClick={() => setOpen(false)}
+              className="absolute top-6 right-6 z-50 text-white bg-black/50 p-2 rounded-full hover:bg-black/70 transition-colors focus:outline-none focus:ring-2 focus:ring-white"
+              type="button"
+              aria-label="Close"
+         >
+              <XIcon className="w-6 h-6" />
+         </button>
+         
+         <div 
+              className="relative w-full h-full flex items-center justify-center p-4 cursor-pointer"
+              onClick={() => setOpen(false)}
+         >
+              <Image
+                  src={imageSrc} 
+                  alt={alt || ""} 
+                  width={width || 1920}
+                  height={height || 1280}
+                  className="max-w-[90vw] max-h-[90vh] w-auto h-auto object-contain rounded-md shadow-2xl cursor-default"
+                  onClick={(e: React.MouseEvent<HTMLImageElement>) => e.stopPropagation()}
+              />
+         </div>
+      </DialogContent>
+    </Dialog>
+  );
+};

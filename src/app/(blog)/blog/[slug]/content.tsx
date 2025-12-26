@@ -2,7 +2,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as _jsx_runtime from "react/jsx-runtime";
-import { createMDXImageComponent } from "@/components/blog/mdx-image";
+import { BlogImage } from "@/components/blog/mdx-image";
+import { createImageCarouselComponent } from "@/components/blog/image-carousel";
 import type { MDXContentProps } from "mdx-bundler/client";
 
 function useMDXComponent(code: string): React.FunctionComponent<MDXContentProps> {
@@ -25,7 +26,8 @@ export default function BlogMDXContent({ code, slug }: BlogContentProps) {
   return (
     <Component 
       components={{
-        img: createMDXImageComponent(slug),
+        img: (props) => <BlogImage slug={slug} {...props} />,
+        Carousel: createImageCarouselComponent(slug),
         a: ({ children, ...props }) => <a target="_blank" rel="noopener noreferrer" {...props}>{children}</a>,
         h1: ({ children, ...props }) => <h1 className="border-b border-border/50 pb-2" {...props}>{children}</h1>,
         h2: ({ children, ...props }) => <h2 className="border-b border-border/50 pb-2" {...props}>{children}</h2>,

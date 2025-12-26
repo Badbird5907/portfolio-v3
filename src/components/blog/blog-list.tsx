@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { motion } from "motion/react";
-import { Calendar, Clock, ArrowRight, User } from "lucide-react";
 import { allPosts } from "content-collections";
+import { motion } from "motion/react";
+import Image from "next/image";
+import Link from "next/link";
+import { Calendar, Clock, User } from "lucide-react";
 
 type Post = typeof allPosts[number];
 
@@ -15,83 +16,102 @@ const description = "Thoughts, stories, and experiences from my journey in tech"
 
 export default function BlogList({ posts }: BlogListProps) {
   return (
-    <div className="max-w-5xl mx-auto px-6 md:px-8">
-      <div className="mb-16 md:mb-24">
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent"
-        >
+    <div className="max-w-5xl mx-auto px-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="mb-12 md:mb-16"
+      >
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent pb-2">
           Blog
-        </motion.h1>
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed"
-        >
+        </h1>
+        <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
           {description}
-        </motion.p>
-      </div>
+        </p>
+        <div className="mt-8 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      </motion.div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:gap-8">
-        {posts.map((post, index) => (
-          <motion.article
-            key={post._meta.directory}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
-            className="group relative flex flex-col h-full"
-          >
-            <Link href={`/blog/${post._meta.directory}`} className="block h-full">
-              <div className="h-full p-6 rounded-2xl border border-border/40 bg-card/30 backdrop-blur-sm hover:bg-card/50 hover:border-primary/20 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 flex flex-col">
-                
-                {/* Metadata */}
-                <div className="flex flex-wrap items-center gap-4 text-xs md:text-sm text-muted-foreground mb-4">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5" />
-                    <time dateTime={new Date(post.date).toISOString()}>
-                      {new Date(post.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </time>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5" />
-                    <span>{post.readingTime}</span>
-                  </div>
-                </div>
+      <div className="space-y-8 md:space-y-12">
+        {posts.map((post, index) => {
+          const formattedDate = new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }).format(new Date(post.date));
 
-                {/* Title */}
-                <h2 className="text-xl md:text-2xl font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2">
-                  {post.title}
-                </h2>
+          return (
+            <motion.article
+              key={post._meta.path}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Link
+                href={`/blog/${post._meta.directory}`}
+                className="group block"
+              >
+                <div className="relative overflow-hidden rounded-lg border border-border bg-card hover:border-primary/50 transition-all duration-300 hover:shadow-lg">
+                  {post.banner && (
+                    <div className="relative w-full aspect-[2/1] overflow-hidden bg-muted">
+                      <Image
+                        src={`/api/blog/images/${post._meta.directory}/${post.banner}`}
+                        alt={post.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                  )}
 
-                {/* Summary */}
-                <p className="text-muted-foreground leading-relaxed mb-6 flex-grow line-clamp-3">
-                  {post.summary}
-                </p>
+                  <div className="p-6 md:p-8">
+                    <h2 className="text-2xl md:text-3xl font-bold mb-3 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/70 transition-all duration-300">
+                      {post.title}
+                    </h2>
 
-                {/* Footer */}
-                <div className="flex items-center justify-between mt-auto pt-4 border-t border-border/30">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <div className="p-1 rounded-full bg-primary/10">
-                          <User className="w-3 h-3 text-primary" />
+                    <p className="text-muted-foreground leading-relaxed mb-4 line-clamp-2">
+                      {post.summary}
+                    </p>
+
+                    <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <User className="h-4 w-4" />
+                        <span>{post.author}</span>
                       </div>
-                      <span>{post.author}</span>
+
+                      <span className="text-border">•</span>
+
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4" />
+                        <time dateTime={new Date(post.date).toISOString()}>
+                          {formattedDate}
+                        </time>
+                      </div>
+
+                      <span className="text-border">•</span>
+
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4" />
+                        <span>{post.readingTime}</span>
+                      </div>
+                    </div>
                   </div>
-                  <span className="flex items-center gap-2 text-sm font-medium text-primary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-                    Read Article <ArrowRight className="w-4 h-4" />
-                  </span>
                 </div>
-              </div>
-            </Link>
-          </motion.article>
-        ))}
+              </Link>
+            </motion.article>
+          );
+        })}
       </div>
+
+      {posts.length === 0 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center py-20"
+        >
+          <p className="text-muted-foreground text-lg">No posts yet. Check back soon!</p>
+        </motion.div>
+      )}
     </div>
-  );
+  )
 }
