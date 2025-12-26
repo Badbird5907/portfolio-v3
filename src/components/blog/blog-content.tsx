@@ -24,7 +24,7 @@ export default function BlogContent({ children }: BlogContentProps) {
         // Paragraphs
         "prose-p:mb-4 prose-p:leading-relaxed prose-p:text-foreground/90 prose-p:break-words",
         // Links
-        "prose-a:text-foreground prose-a:no-underline hover:prose-a:underline prose-a:transition-all prose-a:break-all",
+        "prose-a:text-foreground prose-a:no-underline prose-a:hover:underline prose-a:transition-all prose-a:break-all",
         // Text formatting
         "prose-strong:text-foreground prose-strong:font-bold",
         // Code
