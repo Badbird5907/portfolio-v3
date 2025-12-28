@@ -218,6 +218,7 @@ export default function Stack() {
                 </p>
               </motion.a>
             ))}
+            <br/> {/* this is here to fix a weird bug on brave with different domains?????? */}
             {currentStack.footer && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
