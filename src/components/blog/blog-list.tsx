@@ -55,7 +55,7 @@ export default function BlogList({ posts }: BlogListProps) {
                   {post.banner && (
                     <div className="relative w-full aspect-[2/1] overflow-hidden bg-muted">
                       <Image
-                        src={`/api/blog/images/${post._meta.directory}/${post.banner}`}
+                        src={`/blog/${post._meta.directory}/${post.banner}`}
                         alt={post.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-105"

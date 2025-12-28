@@ -41,7 +41,7 @@ export function createImageCarouselComponent(slug: string) {
       if (imageSrc.startsWith("@")) {
         imageSrc = imageSrc.slice(1);
       }
-      imageSrc = `/api/blog/images/${slug}/${imageSrc}`;
+      imageSrc = `/blog/${slug}/${imageSrc}`;
     } else {
       imageSrc = currentItem.src;
     }

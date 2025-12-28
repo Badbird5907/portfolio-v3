@@ -97,7 +97,7 @@ export default function BlogHeader({
           className="my-2 relative w-full aspect-[2/1] rounded-lg overflow-hidden"
         >
           <BlogImage
-            src={`/api/blog/images/${slug}/${banner}`}
+            src={`/blog/${slug}/${banner}`}
             alt={title}
             fill
             className="object-cover"

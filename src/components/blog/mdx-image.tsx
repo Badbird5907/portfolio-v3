@@ -25,23 +25,31 @@ export function BlogImage({ slug, src, alt, className, width, height, priority, 
     if (imageSrc.startsWith("@")) {
       imageSrc = imageSrc.slice(1);
     }
-    imageSrc = `/api/blog/images/${slug}/${imageSrc}`;
+    imageSrc = `/blog/${slug}/${imageSrc}`;
   } else {
     imageSrc = src;
   }
 
 
+  // Use original dimensions for dialog (larger), constrained dimensions for thumbnail
+  const thumbnailWidth = width || 1200;
+  const thumbnailHeight = height || 800;
+  const dialogWidth = 1920; // Always use larger dimensions for dialog
+  const dialogHeight = 1280;
+  
   const Thumbnail = () => {
-    const imageWidth = width || 1200;
-    const imageHeight = height || 800;
+    // If width is provided, use it for display; otherwise use w-full
+    const widthClass = width ? "" : "w-full";
+    const widthStyle = width ? { width: `${width}px` } : undefined;
     
     return (
       <Image
         src={imageSrc}
         alt={alt || ""}
-        width={imageWidth}
-        height={imageHeight}
-        className={cn("cursor-zoom-in w-full h-auto", containerClassName, "shadow-lg")}
+        width={thumbnailWidth}
+        height={thumbnailHeight}
+        className={cn("cursor-zoom-in h-auto", widthClass, containerClassName, "shadow-lg")}
+        style={widthStyle}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
         priority={priority}
         loading={priority ? undefined : "lazy"}
@@ -53,7 +61,7 @@ export function BlogImage({ slug, src, alt, className, width, height, priority, 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-          <button className="w-full bg-transparent border-none p-0 text-left" type="button">
+          <button className={cn(width ? "inline-block" : "w-full", "bg-transparent border-none p-0 text-left")} type="button">
               <Thumbnail />
           </button>
       </DialogTrigger>
@@ -79,8 +87,8 @@ export function BlogImage({ slug, src, alt, className, width, height, priority, 
               <Image
                   src={imageSrc} 
                   alt={alt || ""} 
-                  width={width || 1920}
-                  height={height || 1280}
+                  width={dialogWidth}
+                  height={dialogHeight}
                   className="max-w-[90vw] max-h-[90vh] w-auto h-auto object-contain rounded-md shadow-2xl cursor-default"
                   onClick={(e: React.MouseEvent<HTMLImageElement>) => e.stopPropagation()}
               />

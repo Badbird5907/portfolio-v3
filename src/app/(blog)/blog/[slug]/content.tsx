@@ -27,6 +27,7 @@ export default function BlogMDXContent({ code, slug }: BlogContentProps) {
     <Component 
       components={{
         img: (props) => <BlogImage slug={slug} {...props} />,
+        BlogImage: (props) => <BlogImage slug={slug} {...props} />,
         Carousel: createImageCarouselComponent(slug),
         a: ({ children, ...props }) => <a target="_blank" rel="noopener noreferrer" {...props}>{children}</a>,
         h1: ({ children, ...props }) => <h1 className="border-b border-border/50 pb-2" {...props}>{children}</h1>,

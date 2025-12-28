@@ -37,7 +37,7 @@ export async function generateMetadata({
     ? {
         images: [
           {
-            url: `/api/blog/images/${slug}/${post.banner}`,
+            url: `/blog/${slug}/${post.banner}`,
             alt: post.title,
           },
         ],
