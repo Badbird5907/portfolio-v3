@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import Image from "next/image";
 import UofTLogo from "@/components/icons/utoronto";
+import Link from "next/link";
 
 export default function About() {
   return (
@@ -35,11 +36,17 @@ export default function About() {
             >
               {/* Description */}
               <p className="text-muted-foreground text-lg md:text-xl">
-                As a full-stack software engineer, I’m passionate about building
+                As a full-stack software engineer, I'm passionate about building
                 impactful and meaningful projects that make a difference. I
-                actively seek out new learning experiences and enjoy competing
-                in hackathons—having won three out of the five I’ve participated
-                in. Beyond software, I have a strong interest in designing and
+                actively seek out new learning experiences and enjoy competing in
+                hackathons—having won four out of the eight I've{" "}
+                <Link
+                  href="/hackathons"
+                  className="text-primary hover:underline"
+                >
+                  participated in
+                </Link>
+                . Beyond software, I have a strong interest in designing and
                 building hardware, from PCBs to robotics systems.
               </p>
 
