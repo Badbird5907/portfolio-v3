@@ -24,7 +24,7 @@ const work: Work[] = [
     points: [
       "Led development of a multi-tenant platform, serving 9,000+ monthly active users, using React, NextJS, PostgreSQL, and Drizzle ORM, ensuring seamless scalability and UX",
       "Developed and launched a LinkedIn-like social platform with features such as real-time chat, connection-building, and posts with recommendations based on the user’s preferences",
-      "Applied knowledge of algorithms (e.g. BFS/DFS) and data structures (e.g., graphs) to enhance the scalability and optimize API endpoint performance.",
+      "Applied knowledge of algorithms and data structures to enhance the scalability and optimize API endpoint performance.",
       "Optimized database with targeted indexes and Redis caching; cut query times by 40% and lowered DB CPU.",
       "Scaled serverless backend (AWS Lambda + SST) to 10k+ concurrent requests; implemented async job queues and hot-path caching to maintain 99.9% availability and reduce p95 latency by 10%.",
     ],
