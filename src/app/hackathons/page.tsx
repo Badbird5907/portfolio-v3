@@ -167,7 +167,7 @@ const hackathons: Hackathon[] = [
       }
     ],
     description:
-      'Built "The Third Leg" project. Won best use of Snowflake API.',
+      'Built "Mission Control / The Trident" - Completely rebuilt the arduino IDE in the browser complete with LSP, compiling/uploading, and an ai agent. Won best use of Snowflake API.',
   },
 ];
 
