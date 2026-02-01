@@ -153,6 +153,22 @@ const hackathons: Hackathon[] = [
     description:
       "Built an AI-powered recruiting platform with a live OA using Gemini Live. Deployed on Vultr (Object Storage, Container Registry, Compute, Managed Postgres).",
   },
+  {
+    name: "UTRAHacks (2026)",
+    url: "https://hackathon.utra.ca/",
+    date: "Jan-Feb 2026",
+    fullDate: new Date("2026-02-01"),
+    award: "🏆 Best Use of Snowflake API",
+    location: "University of Toronto",
+    links: [
+      {
+        label: "Devpost",
+        url: "https://devpost.com/software/the-third-leg",
+      }
+    ],
+    description:
+      'Built "The Third Leg" project. Won best use of Snowflake API.',
+  },
 ];
 
 const sortOptions: {
