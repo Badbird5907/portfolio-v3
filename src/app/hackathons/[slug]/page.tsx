@@ -1,5 +1,5 @@
 import { redirect, notFound } from "next/navigation";
-import { hackathons } from "../page";
+import { hackathons } from "../data";
 
 interface PageProps {
   params: Promise<{
