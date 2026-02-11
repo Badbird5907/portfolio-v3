@@ -27,7 +27,7 @@
     "lucide-react": "^0.544.0",
     "mdx-bundler": "^10.1.1",
     "motion": "^12.23.22",
-    "next": "16.0.7",
+    "next": "16.0.10",
     "openmeteo": "^1.2.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
