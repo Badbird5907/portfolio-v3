@@ -169,4 +169,22 @@ export const hackathons: Hackathon[] = [
     description:
       'Built "Mission Control / The Trident" - Completely rebuilt the arduino IDE in the browser complete with LSP, compiling/uploading, and an ai agent. Won best use of Snowflake API.',
   },
+  {
+    name: "TreeHacks 2026",
+    slug: "treehacks-2026",
+    url: "https://devpost.com/software/minerva-3sj6z0",
+    date: "Feb 2026",
+    fullDate: new Date("2026-02-14"),
+    award: "🏆 1st Place - Education Track (Zoom) | Best Creation with HeyGen Avatar API",
+    location: "Stanford University",
+    links: [
+      { label: "Devpost", url: "https://devpost.com/software/minerva-3sj6z0" },
+      {
+        label: "GitHub",
+        url: "https://github.com/anton-3/minerva"
+      }
+    ],
+    description:
+      "Built Minerva - An innovative education platform. Won first place in the Education track sponsored by Zoom and Best Creation with HeyGen Avatar API.",
+  },
 ];
