@@ -172,7 +172,7 @@ export const hackathons: Hackathon[] = [
   {
     name: "TreeHacks 2026",
     slug: "treehacks-2026",
-    url: "https://devpost.com/software/minerva-3sj6z0",
+    url: "https://treehacks.com/",
     date: "Feb 2026",
     fullDate: new Date("2026-02-14"),
     award: "🏆 1st Place - Education Track (Zoom) | Best Creation with HeyGen Avatar API",
