@@ -185,6 +185,6 @@ export const hackathons: Hackathon[] = [
       }
     ],
     description:
-      "Built Minerva - An innovative education platform. Won first place in the Education track sponsored by Zoom and Best Creation with HeyGen Avatar API.",
+      "Built an accessible AI tutor platform that teaches any topic over video calls in a non-judgmental environment. Generates MANIM animations for math concepts and integrates with Desmos for interactive teaching.",
   },
 ];
