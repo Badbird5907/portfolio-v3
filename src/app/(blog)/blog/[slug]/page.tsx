@@ -82,6 +82,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               author={post.author}
               summary={post.summary}
               banner={post.banner}
+              bannerCenter={post.bannerCenter}
               slug={post._meta.directory}
             />
 

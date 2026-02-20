@@ -2,7 +2,6 @@
 
 import { Calendar, Clock, Dot, User } from "lucide-react";
 import { motion } from "motion/react";
-import Image from "next/image";
 import { BlogImage } from "./mdx-image";
 
 interface BlogHeaderProps {
@@ -12,6 +11,7 @@ interface BlogHeaderProps {
   summary: string;
   readingTime: string;
   banner?: string;
+  bannerCenter?: boolean;
   slug?: string;
 }
 
@@ -22,6 +22,7 @@ export default function BlogHeader({
   summary,
   readingTime,
   banner,
+  bannerCenter,
   slug,
 }: BlogHeaderProps) {
   const formattedDate = new Intl.DateTimeFormat("en-US", {
@@ -100,7 +101,7 @@ export default function BlogHeader({
             src={`/blog/${slug}/${banner}`}
             alt={title}
             fill
-            className="object-cover"
+            className={`object-cover ${bannerCenter ? "object-center" : "object-top"}`}
             priority
           />
         </motion.div>

@@ -30,18 +30,30 @@ export function BlogImage({ slug, src, alt, className, width, height, priority, 
     imageSrc = src;
   }
 
-
-  // Use original dimensions for dialog (larger), constrained dimensions for thumbnail
-  const thumbnailWidth = width || 1200;
-  const thumbnailHeight = height || 800;
-  const dialogWidth = 1920; // Always use larger dimensions for dialog
+  const dialogWidth = 1920;
   const dialogHeight = 1280;
   
   const Thumbnail = () => {
-    // If width is provided, use it for display; otherwise use w-full
+    if (fill) {
+      return (
+        <Image
+          src={imageSrc}
+          alt={alt || ""}
+          fill
+          className={cn("cursor-zoom-in", className)}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+          priority={priority}
+          loading={priority ? undefined : "lazy"}
+          {...props}
+        />
+      );
+    }
+
+    const thumbnailWidth = width || 1200;
+    const thumbnailHeight = height || 800;
     const widthClass = width ? "" : "w-full";
     const widthStyle = width ? { width: `${width}px` } : undefined;
-    
+
     return (
       <Image
         src={imageSrc}
@@ -61,7 +73,7 @@ export function BlogImage({ slug, src, alt, className, width, height, priority, 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-          <button className={cn(width ? "inline-block" : "w-full", "bg-transparent border-none p-0 text-left")} type="button">
+          <button className={cn(fill ? "absolute inset-0" : width ? "inline-block" : "w-full", "bg-transparent border-none p-0 text-left")} type="button">
               <Thumbnail />
           </button>
       </DialogTrigger>
