@@ -44,10 +44,10 @@ const technologies = {
         href: "https://nextjs.org/",
       },
       {
-        name: "TypeScript",
+        name: "tRPC",
         Icon: TrpcIcon,
-        category: "Language",
-        href: "https://www.typescriptlang.org/",
+        category: "RPC/API Layer",
+        href: "https://trpc.io/",
       },
       {
         name: "PostgreSQL",
