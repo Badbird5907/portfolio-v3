@@ -4,6 +4,7 @@ import * as ReactDOM from "react-dom";
 import * as _jsx_runtime from "react/jsx-runtime";
 import { BlogImage } from "@/components/blog/mdx-image";
 import { createImageCarouselComponent } from "@/components/blog/image-carousel";
+import { YouTubeEmbed } from "@/components/blog/youtube-embed";
 import type { MDXContentProps } from "mdx-bundler/client";
 
 function useMDXComponent(code: string): React.FunctionComponent<MDXContentProps> {
@@ -29,6 +30,7 @@ export default function BlogMDXContent({ code, slug }: BlogContentProps) {
         img: (props) => <BlogImage slug={slug} {...props} />,
         BlogImage: (props) => <BlogImage slug={slug} {...props} />,
         Carousel: createImageCarouselComponent(slug),
+        YouTubeEmbed,
         a: ({ children, ...props }) => <a target="_blank" rel="noopener noreferrer" {...props}>{children}</a>,
         h1: ({ children, ...props }) => <h1 className="border-b border-border/50 pb-2" {...props}>{children}</h1>,
         h2: ({ children, ...props }) => <h2 className="border-b border-border/50 pb-2" {...props}>{children}</h2>,
