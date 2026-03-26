@@ -1,9 +1,11 @@
-import { hackathons } from "@/app/hackathons/data";
-import { work } from "@/lib/work";
-import { Button } from "@/components/ui/button";
-import type { Metadata } from "next";
+import { allPosts } from "content-collections";
 import { ArrowRight, Github, Linkedin } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+import { hackathons } from "@/app/hackathons/data";
+import BlogPostCard from "@/components/blog/blog-post-card";
+import { Button } from "@/components/ui/button";
+import { work } from "@/lib/work";
 
 export const metadata: Metadata = {
   title: "Connect | Evan Yu",
@@ -27,6 +29,9 @@ export default async function ConnectPage({
 }) {
   const { from } = await searchParams;
   const { total, wonCount, mostRecent } = hackathonStats();
+  const latestPost = [...allPosts].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  )[0];
 
   const fromLabel =
     from && from.trim().length > 0
@@ -44,7 +49,8 @@ export default async function ConnectPage({
             {fromLabel ? (
               <p className="text-center text-xl text-muted-foreground md:text-2xl">
                 Nice meeting you at{" "}
-                <span className="font-medium text-foreground">{fromLabel}</span>!
+                <span className="font-medium text-foreground">{fromLabel}</span>
+                !
               </p>
             ) : null}
           </div>
@@ -66,21 +72,25 @@ export default async function ConnectPage({
                 className="font-medium text-foreground hover:underline"
               >
                 ConnectAlum
-              </a>. I&apos;m passionate about startups and
-              building software that actually matters.
+              </a>
+              . I&apos;m passionate about startups and building software that
+              actually matters.
             </p>
             <p>
               I'm obsessed with hackathons. I've currently won{" "}
               <span className="font-medium text-foreground">
                 {wonCount}/{total}
-              </span>
-              {" "}hackathons attended, most recently{" "}
+              </span>{" "}
+              hackathons attended, most recently{" "}
               <span className="font-medium text-foreground">
                 {mostRecent.name}
               </span>
-              {mostRecent.location && ` at ${mostRecent.location}`}
-              .{" "}
-              <Link href="/hackathons" target="_blank" className="text-primary hover:underline">
+              {mostRecent.location && ` at ${mostRecent.location}`}.{" "}
+              <Link
+                href="/hackathons"
+                target="_blank"
+                className="text-primary hover:underline"
+              >
                 All hackathons
               </Link>
               .
@@ -89,22 +99,34 @@ export default async function ConnectPage({
         </header>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
-          <Button asChild variant="secondary" size="lg" className="w-full sm:w-auto">
+          <Button
+            asChild
+            variant="secondary"
+            size="lg"
+            className="w-full sm:w-auto"
+          >
             <Link href="/" target="_blank">
               View my portfolio
               <ArrowRight className="size-4" />
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-            <Link
-              href="https://github.com/Badbird5907"
-              target="_blank"
-            >
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="w-full sm:w-auto"
+          >
+            <Link href="https://github.com/Badbird5907" target="_blank">
               <Github className="size-4" />
               GitHub
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="w-full sm:w-auto"
+          >
             <Link
               href="https://linkedin.com/in/ev-yu"
               target="_blank"
@@ -116,6 +138,14 @@ export default async function ConnectPage({
           </Button>
         </div>
 
+        {latestPost ? (
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold text-center">
+              Featured Blog Post
+            </h2>
+            <BlogPostCard post={latestPost} />
+          </section>
+        ) : null}
       </div>
     </main>
   );
