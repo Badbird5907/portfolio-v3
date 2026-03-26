@@ -141,7 +141,7 @@ export default async function ConnectPage({
         {latestPost ? (
           <section className="space-y-3">
             <h2 className="text-xl font-semibold text-center">
-              Featured Blog Post
+              Here's my most recent blog post!
             </h2>
             <BlogPostCard post={latestPost} />
           </section>

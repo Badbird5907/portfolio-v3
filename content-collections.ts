@@ -18,6 +18,7 @@ const posts = defineCollection({
     author: z.string(),
     banner: z.string().optional(),
     bannerCenter: z.boolean().optional().default(false),
+    featured: z.boolean().optional().default(false)
     // readingTime: z.string(),
   }),
   transform: async (document, context) => {
