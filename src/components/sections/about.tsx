@@ -47,7 +47,7 @@ export default function About() {
                 >
                   participated in
                 </Link>
-                . Most recently being <Link href="https://devpost.com/software/minerva-3sj6z0" className="text-primary hover:underline">TreeHacks 2026</Link>, where
+                . Most recently being <Link href="https://devpost.com/software/minerva-3sj6z0" className="text-primary hover:underline" target="_blank">TreeHacks 2026</Link>, where
                 I built Minerva, an AI video tutor that won both 1st place in the Education Track and Best Creation with HeyGen API.
               </p>
 
