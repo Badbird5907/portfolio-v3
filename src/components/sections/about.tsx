@@ -39,15 +39,16 @@ export default function About() {
                 As a full-stack software engineer, I'm passionate about building
                 impactful and meaningful projects that make a difference. I
                 actively seek out new learning experiences and enjoy competing in
-                hackathons—having won four out of the eight I've{" "}
+                hackathons, having won six out of the ten I've{" "}
                 <Link
                   href="/hackathons"
                   className="text-primary hover:underline"
+                  target="_blank"
                 >
                   participated in
                 </Link>
-                . Beyond software, I have a strong interest in designing and
-                building hardware, from PCBs to robotics systems.
+                . Most recently being <Link href="https://devpost.com/software/minerva-3sj6z0" className="text-primary hover:underline">TreeHacks 2026</Link>, where
+                I built Minerva, an AI video tutor that won both 1st place in the Education Track and Best Creation with HeyGen API.
               </p>
 
               {/* Education */}
