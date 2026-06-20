@@ -1,15 +1,16 @@
 "use client";
 
-import * as React from "react";
 import { ChevronLeft, ChevronRight, XIcon } from "lucide-react";
+import Image from "next/image";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
-  DialogTrigger,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 interface CarouselItem {
   src: string;
@@ -35,7 +36,6 @@ export function createImageCarouselComponent(slug: string) {
 
     const currentItem = items[currentIndex];
 
-
     let imageSrc = currentItem.src;
     if (!imageSrc.startsWith("http")) {
       if (imageSrc.startsWith("@")) {
@@ -55,10 +55,13 @@ export function createImageCarouselComponent(slug: string) {
                 className="aspect-video relative flex flex-col items-center justify-center w-full bg-transparent border-none p-0 cursor-zoom-in"
                 type="button"
               >
-                <img
+                <Image
                   src={imageSrc}
                   alt={currentItem.caption}
+                  width={1200}
+                  height={675}
                   className="max-h-full max-w-full object-contain w-full h-full"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
                   loading="lazy"
                 />
               </button>
@@ -103,15 +106,21 @@ export function createImageCarouselComponent(slug: string) {
               <XIcon className="w-6 h-6" />
             </button>
 
-            <div 
+            <div
               className="relative w-full h-full flex items-center justify-center p-4"
               onClick={() => setOpen(false)}
             >
-              <img
+              <Image
                 src={imageSrc}
                 alt={currentItem.caption}
+                width={1920}
+                height={1080}
                 className="max-w-[90vw] max-h-[90vh] object-contain rounded-md shadow-2xl"
-                onClick={(e) => e.stopPropagation()}
+                sizes="90vw"
+                quality={90}
+                onClick={(e: React.MouseEvent<HTMLImageElement>) =>
+                  e.stopPropagation()
+                }
               />
 
               {items.length > 1 && (
@@ -142,7 +151,7 @@ export function createImageCarouselComponent(slug: string) {
               )}
             </div>
 
-            <div 
+            <div
               className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 w-fit bg-background/50 backdrop-blur-sm rounded-full p-2"
               onClick={(e) => e.stopPropagation()}
             >
@@ -158,7 +167,7 @@ export function createImageCarouselComponent(slug: string) {
                         "w-2 h-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white",
                         idx === currentIndex
                           ? "bg-primary"
-                          : "bg-primary/40 hover:bg-primary/60"
+                          : "bg-primary/40 hover:bg-primary/60",
                       )}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -184,7 +193,7 @@ export function createImageCarouselComponent(slug: string) {
                     "w-2 h-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-ring",
                     idx === currentIndex
                       ? "bg-primary"
-                      : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                      : "bg-muted-foreground/30 hover:bg-muted-foreground/50",
                   )}
                   onClick={() => setCurrentIndex(idx)}
                   aria-label={`Go to image ${idx + 1}`}
