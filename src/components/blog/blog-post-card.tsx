@@ -25,6 +25,7 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
               src={`/blog/${post._meta.directory}/${post.banner}`}
               alt={post.title}
               fill
+              sizes="(max-width: 1024px) 100vw, 1024px"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
