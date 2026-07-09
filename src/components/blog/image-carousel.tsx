@@ -104,7 +104,7 @@ export function createImageCarouselComponent(slug: string) {
               {items.map((item, idx) =>
                 idx === currentIndex ? null : (
                   <Image
-                    key={`${item.src}-${idx}`}
+                    key={`${item.src}-${item.caption}`}
                     src={resolveCarouselImageSrc(item.src, slug)}
                     alt=""
                     width={1200}
@@ -121,6 +121,7 @@ export function createImageCarouselComponent(slug: string) {
           <DialogContent
             className="!fixed !inset-0 !w-screen !h-screen !transform-none !translate-x-0 !translate-y-0 !max-w-none !top-0 !left-0 !bg-transparent !border-none !shadow-none !flex !items-center !justify-center !z-50 !p-0 !gap-0"
             showCloseButton={false}
+            onClick={() => setOpen(false)}
           >
             <DialogTitle className="sr-only">
               {currentItem.caption || "Image preview"}
@@ -137,7 +138,6 @@ export function createImageCarouselComponent(slug: string) {
 
             <div
               className="relative w-full h-full flex items-center justify-center p-4"
-              onClick={() => setOpen(false)}
             >
               <Image
                 src={imageSrc}
@@ -182,16 +182,16 @@ export function createImageCarouselComponent(slug: string) {
 
             <div
               className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 w-fit bg-background/50 backdrop-blur-sm rounded-full p-2"
-              onClick={(e) => e.stopPropagation()}
             >
               <p className="text-sm text-white px-4 py-2">
                 {currentItem.caption}
               </p>
               {items.length > 1 && (
                 <div className="flex justify-center gap-1.5">
-                  {items.map((_, idx) => (
+                  {items.map((item, idx) => (
                     <button
-                      key={idx}
+                      key={`${item.src}-${item.caption}`}
+                      type="button"
                       className={cn(
                         "w-2 h-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white",
                         idx === currentIndex
@@ -215,9 +215,10 @@ export function createImageCarouselComponent(slug: string) {
           <p className="text-sm text-muted-foreground">{currentItem.caption}</p>
           {items.length > 1 && (
             <div className="flex justify-center gap-1.5">
-              {items.map((_, idx) => (
+              {items.map((item, idx) => (
                 <button
-                  key={idx}
+                  key={`${item.src}-${item.caption}`}
+                  type="button"
                   className={cn(
                     "w-2 h-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-ring",
                     idx === currentIndex
