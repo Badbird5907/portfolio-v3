@@ -136,9 +136,7 @@ export function createImageCarouselComponent(slug: string) {
               <XIcon className="w-6 h-6" />
             </button>
 
-            <div
-              className="relative w-full h-full flex items-center justify-center p-4"
-            >
+            <div className="relative w-full h-full flex items-center justify-center p-4">
               <Image
                 src={imageSrc}
                 alt={currentItem.caption}
@@ -180,9 +178,7 @@ export function createImageCarouselComponent(slug: string) {
               )}
             </div>
 
-            <div
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 w-fit bg-background/50 backdrop-blur-sm rounded-full p-2"
-            >
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 w-fit bg-background/50 backdrop-blur-sm rounded-full p-2">
               <p className="text-sm text-white px-4 py-2">
                 {currentItem.caption}
               </p>
