@@ -21,6 +21,22 @@ interface ImageCarouselProps {
   items: CarouselItem[];
 }
 
+const carouselImageSizes =
+  "(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px";
+
+function resolveCarouselImageSrc(src: string, slug: string) {
+  let imageSrc = src;
+
+  if (!imageSrc.startsWith("http") && !imageSrc.startsWith("/")) {
+    if (imageSrc.startsWith("@")) {
+      imageSrc = imageSrc.slice(1);
+    }
+    imageSrc = `/blog/${slug}/${imageSrc}`;
+  }
+
+  return imageSrc;
+}
+
 export function createImageCarouselComponent(slug: string) {
   return function ImageCarousel({ items }: ImageCarouselProps) {
     const [currentIndex, setCurrentIndex] = React.useState(0);
@@ -35,16 +51,7 @@ export function createImageCarouselComponent(slug: string) {
     };
 
     const currentItem = items[currentIndex];
-
-    let imageSrc = currentItem.src;
-    if (!imageSrc.startsWith("http")) {
-      if (imageSrc.startsWith("@")) {
-        imageSrc = imageSrc.slice(1);
-      }
-      imageSrc = `/blog/${slug}/${imageSrc}`;
-    } else {
-      imageSrc = currentItem.src;
-    }
+    const imageSrc = resolveCarouselImageSrc(currentItem.src, slug);
 
     return (
       <div className="my-8 flex flex-col items-center">
@@ -61,8 +68,8 @@ export function createImageCarouselComponent(slug: string) {
                   width={1200}
                   height={675}
                   className="max-h-full max-w-full object-contain w-full h-full"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
-                  loading="lazy"
+                  sizes={carouselImageSizes}
+                  loading="eager"
                 />
               </button>
             </DialogTrigger>
@@ -89,9 +96,32 @@ export function createImageCarouselComponent(slug: string) {
             )}
           </div>
 
+          {items.length > 1 && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0"
+            >
+              {items.map((item, idx) =>
+                idx === currentIndex ? null : (
+                  <Image
+                    key={`${item.src}-${item.caption}`}
+                    src={resolveCarouselImageSrc(item.src, slug)}
+                    alt=""
+                    width={1200}
+                    height={675}
+                    sizes={carouselImageSizes}
+                    loading="eager"
+                    className="h-px w-px object-cover"
+                  />
+                ),
+              )}
+            </div>
+          )}
+
           <DialogContent
             className="!fixed !inset-0 !w-screen !h-screen !transform-none !translate-x-0 !translate-y-0 !max-w-none !top-0 !left-0 !bg-transparent !border-none !shadow-none !flex !items-center !justify-center !z-50 !p-0 !gap-0"
             showCloseButton={false}
+            onClick={() => setOpen(false)}
           >
             <DialogTitle className="sr-only">
               {currentItem.caption || "Image preview"}
@@ -106,10 +136,7 @@ export function createImageCarouselComponent(slug: string) {
               <XIcon className="w-6 h-6" />
             </button>
 
-            <div
-              className="relative w-full h-full flex items-center justify-center p-4"
-              onClick={() => setOpen(false)}
-            >
+            <div className="relative w-full h-full flex items-center justify-center p-4">
               <Image
                 src={imageSrc}
                 alt={currentItem.caption}
@@ -151,18 +178,16 @@ export function createImageCarouselComponent(slug: string) {
               )}
             </div>
 
-            <div
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 w-fit bg-background/50 backdrop-blur-sm rounded-full p-2"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 w-fit bg-background/50 backdrop-blur-sm rounded-full p-2">
               <p className="text-sm text-white px-4 py-2">
                 {currentItem.caption}
               </p>
               {items.length > 1 && (
                 <div className="flex justify-center gap-1.5">
-                  {items.map((_, idx) => (
+                  {items.map((item, idx) => (
                     <button
-                      key={idx}
+                      key={`${item.src}-${item.caption}`}
+                      type="button"
                       className={cn(
                         "w-2 h-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white",
                         idx === currentIndex
@@ -186,9 +211,10 @@ export function createImageCarouselComponent(slug: string) {
           <p className="text-sm text-muted-foreground">{currentItem.caption}</p>
           {items.length > 1 && (
             <div className="flex justify-center gap-1.5">
-              {items.map((_, idx) => (
+              {items.map((item, idx) => (
                 <button
-                  key={idx}
+                  key={`${item.src}-${item.caption}`}
+                  type="button"
                   className={cn(
                     "w-2 h-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-ring",
                     idx === currentIndex
