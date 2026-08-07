@@ -1,11 +1,8 @@
 packages:
   - .
 
-allowBuilds:
-  '@tailwindcss/oxide': true
-  esbuild: true
-  sharp: true
-  workerd: true
-overrides:
-  '@types/react': 19.2.2
-  '@types/react-dom': 19.2.2
+onlyBuiltDependencies:
+  - '@tailwindcss/oxide'
+  - esbuild
+  - sharp
+  - workerd
