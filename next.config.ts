@@ -1,7 +1,13 @@
 import { fileURLToPath } from "node:url";
 import { withContentCollections } from "@content-collections/next";
+import createMDX from "@next/mdx";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import createJiti from "jiti";
 import type { NextConfig } from "next";
+
+if (process.env.NODE_ENV === "development") {
+  initOpenNextCloudflareForDev();
+}
 
 // Import env here to validate during build. Using jiti we can import .ts files
 const jiti = createJiti(fileURLToPath(import.meta.url));
@@ -16,4 +22,11 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withContentCollections(nextConfig);
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: ["remark-frontmatter"],
+    rehypePlugins: [["rehype-pretty-code", { theme: "github-dark" }]],
+  },
+});
+
+export default withContentCollections(withMDX(nextConfig));

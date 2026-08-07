@@ -17,7 +17,7 @@ interface CarouselItem {
   caption: string;
 }
 
-interface ImageCarouselProps {
+export interface ImageCarouselProps {
   items: CarouselItem[];
 }
 
@@ -37,198 +37,199 @@ function resolveCarouselImageSrc(src: string, slug: string) {
   return imageSrc;
 }
 
-export function createImageCarouselComponent(slug: string) {
-  return function ImageCarousel({ items }: ImageCarouselProps) {
-    const [currentIndex, setCurrentIndex] = React.useState(0);
-    const [open, setOpen] = React.useState(false);
+export function ImageCarousel({
+  items,
+  slug,
+}: ImageCarouselProps & { slug: string }) {
+  const [currentIndex, setCurrentIndex] = React.useState(0);
+  const [open, setOpen] = React.useState(false);
 
-    const next = () => {
-      setCurrentIndex((prev) => (prev + 1) % items.length);
-    };
+  const next = () => {
+    setCurrentIndex((prev) => (prev + 1) % items.length);
+  };
 
-    const prev = () => {
-      setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
-    };
+  const prev = () => {
+    setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
+  };
 
-    const currentItem = items[currentIndex];
-    const imageSrc = resolveCarouselImageSrc(currentItem.src, slug);
+  const currentItem = items[currentIndex];
+  const imageSrc = resolveCarouselImageSrc(currentItem.src, slug);
 
-    return (
-      <div className="my-8 flex flex-col items-center">
-        <Dialog open={open} onOpenChange={setOpen}>
-          <div className="relative w-full overflow-hidden rounded-lg bg-muted/20 border group">
-            <DialogTrigger asChild>
-              <button
-                className="aspect-video relative flex flex-col items-center justify-center w-full bg-transparent border-none p-0 cursor-zoom-in"
-                type="button"
+  return (
+    <div className="my-8 flex flex-col items-center">
+      <Dialog open={open} onOpenChange={setOpen}>
+        <div className="relative w-full overflow-hidden rounded-lg bg-muted/20 border group">
+          <DialogTrigger asChild>
+            <button
+              className="aspect-video relative flex flex-col items-center justify-center w-full bg-transparent border-none p-0 cursor-zoom-in"
+              type="button"
+            >
+              <Image
+                src={imageSrc}
+                alt={currentItem.caption}
+                width={1200}
+                height={675}
+                className="max-h-full max-w-full object-contain w-full h-full"
+                sizes={carouselImageSizes}
+                loading="eager"
+              />
+            </button>
+          </DialogTrigger>
+
+          {items.length > 1 && (
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-background/50 hover:bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={prev}
               >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-background/50 hover:bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={next}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </>
+          )}
+        </div>
+
+        {items.length > 1 && (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0"
+          >
+            {items.map((item, idx) =>
+              idx === currentIndex ? null : (
                 <Image
-                  src={imageSrc}
-                  alt={currentItem.caption}
+                  key={`${item.src}-${item.caption}`}
+                  src={resolveCarouselImageSrc(item.src, slug)}
+                  alt=""
                   width={1200}
                   height={675}
-                  className="max-h-full max-w-full object-contain w-full h-full"
                   sizes={carouselImageSizes}
                   loading="eager"
+                  className="h-px w-px object-cover"
                 />
-              </button>
-            </DialogTrigger>
+              ),
+            )}
+          </div>
+        )}
+
+        <DialogContent
+          className="!fixed !inset-0 !w-screen !h-screen !transform-none !translate-x-0 !translate-y-0 !max-w-none !top-0 !left-0 !bg-transparent !border-none !shadow-none !flex !items-center !justify-center !z-50 !p-0 !gap-0"
+          showCloseButton={false}
+          onClick={() => setOpen(false)}
+        >
+          <DialogTitle className="sr-only">
+            {currentItem.caption || "Image preview"}
+          </DialogTitle>
+
+          <button
+            onClick={() => setOpen(false)}
+            className="absolute top-6 right-6 z-50 text-white bg-black/50 p-2 rounded-full hover:bg-black/70 transition-colors focus:outline-none focus:ring-2 focus:ring-white"
+            type="button"
+            aria-label="Close"
+          >
+            <XIcon className="w-6 h-6" />
+          </button>
+
+          <div className="relative w-full h-full flex items-center justify-center p-4">
+            <Image
+              src={imageSrc}
+              alt={currentItem.caption}
+              width={1920}
+              height={1080}
+              className="max-w-[90vw] max-h-[90vh] object-contain rounded-md shadow-2xl"
+              sizes="90vw"
+              quality={90}
+              onClick={(e: React.MouseEvent<HTMLImageElement>) =>
+                e.stopPropagation()
+              }
+            />
 
             {items.length > 1 && (
               <>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-background/50 hover:bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={prev}
+                  className="absolute left-6 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prev();
+                  }}
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-6 w-6" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-background/50 hover:bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={next}
+                  className="absolute right-6 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    next();
+                  }}
                 >
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-6 w-6" />
                 </Button>
               </>
             )}
           </div>
 
-          {items.length > 1 && (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0"
-            >
-              {items.map((item, idx) =>
-                idx === currentIndex ? null : (
-                  <Image
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 w-fit bg-background/50 backdrop-blur-sm rounded-full p-2">
+            <p className="text-sm text-white px-4 py-2">
+              {currentItem.caption}
+            </p>
+            {items.length > 1 && (
+              <div className="flex justify-center gap-1.5">
+                {items.map((item, idx) => (
+                  <button
                     key={`${item.src}-${item.caption}`}
-                    src={resolveCarouselImageSrc(item.src, slug)}
-                    alt=""
-                    width={1200}
-                    height={675}
-                    sizes={carouselImageSizes}
-                    loading="eager"
-                    className="h-px w-px object-cover"
+                    type="button"
+                    className={cn(
+                      "w-2 h-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white",
+                      idx === currentIndex
+                        ? "bg-primary"
+                        : "bg-primary/40 hover:bg-primary/60",
+                    )}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCurrentIndex(idx);
+                    }}
+                    aria-label={`Go to image ${idx + 1}`}
                   />
-                ),
-              )}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
-          <DialogContent
-            className="!fixed !inset-0 !w-screen !h-screen !transform-none !translate-x-0 !translate-y-0 !max-w-none !top-0 !left-0 !bg-transparent !border-none !shadow-none !flex !items-center !justify-center !z-50 !p-0 !gap-0"
-            showCloseButton={false}
-            onClick={() => setOpen(false)}
-          >
-            <DialogTitle className="sr-only">
-              {currentItem.caption || "Image preview"}
-            </DialogTitle>
-
-            <button
-              onClick={() => setOpen(false)}
-              className="absolute top-6 right-6 z-50 text-white bg-black/50 p-2 rounded-full hover:bg-black/70 transition-colors focus:outline-none focus:ring-2 focus:ring-white"
-              type="button"
-              aria-label="Close"
-            >
-              <XIcon className="w-6 h-6" />
-            </button>
-
-            <div className="relative w-full h-full flex items-center justify-center p-4">
-              <Image
-                src={imageSrc}
-                alt={currentItem.caption}
-                width={1920}
-                height={1080}
-                className="max-w-[90vw] max-h-[90vh] object-contain rounded-md shadow-2xl"
-                sizes="90vw"
-                quality={90}
-                onClick={(e: React.MouseEvent<HTMLImageElement>) =>
-                  e.stopPropagation()
-                }
+      <div className="text-center w-full pb-4">
+        <p className="text-sm text-muted-foreground">{currentItem.caption}</p>
+        {items.length > 1 && (
+          <div className="flex justify-center gap-1.5">
+            {items.map((item, idx) => (
+              <button
+                key={`${item.src}-${item.caption}`}
+                type="button"
+                className={cn(
+                  "w-2 h-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-ring",
+                  idx === currentIndex
+                    ? "bg-primary"
+                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50",
+                )}
+                onClick={() => setCurrentIndex(idx)}
+                aria-label={`Go to image ${idx + 1}`}
               />
-
-              {items.length > 1 && (
-                <>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute left-6 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      prev();
-                    }}
-                  >
-                    <ChevronLeft className="h-6 w-6" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-6 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      next();
-                    }}
-                  >
-                    <ChevronRight className="h-6 w-6" />
-                  </Button>
-                </>
-              )}
-            </div>
-
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 w-fit bg-background/50 backdrop-blur-sm rounded-full p-2">
-              <p className="text-sm text-white px-4 py-2">
-                {currentItem.caption}
-              </p>
-              {items.length > 1 && (
-                <div className="flex justify-center gap-1.5">
-                  {items.map((item, idx) => (
-                    <button
-                      key={`${item.src}-${item.caption}`}
-                      type="button"
-                      className={cn(
-                        "w-2 h-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white",
-                        idx === currentIndex
-                          ? "bg-primary"
-                          : "bg-primary/40 hover:bg-primary/60",
-                      )}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setCurrentIndex(idx);
-                      }}
-                      aria-label={`Go to image ${idx + 1}`}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        <div className="text-center w-full pb-4">
-          <p className="text-sm text-muted-foreground">{currentItem.caption}</p>
-          {items.length > 1 && (
-            <div className="flex justify-center gap-1.5">
-              {items.map((item, idx) => (
-                <button
-                  key={`${item.src}-${item.caption}`}
-                  type="button"
-                  className={cn(
-                    "w-2 h-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-ring",
-                    idx === currentIndex
-                      ? "bg-primary"
-                      : "bg-muted-foreground/30 hover:bg-muted-foreground/50",
-                  )}
-                  onClick={() => setCurrentIndex(idx)}
-                  aria-label={`Go to image ${idx + 1}`}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
-    );
-  };
+    </div>
+  );
 }

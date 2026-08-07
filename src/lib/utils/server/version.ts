@@ -11,41 +11,37 @@ export async function getVersionString(): Promise<{
       url: cachedUrl,
     };
   }
-  const enviornment = process.env.VERCEL_ENV ?? process.env.NODE_ENV;
-  const vercel = process.env.VERCEL === "1";
+  const environment = process.env.NODE_ENV;
+  const cloudflare =
+    process.env.DEPLOYMENT_PLATFORM === "cloudflare" ||
+    process.env.WORKERS_CI === "1";
   const {
-    VERCEL_GIT_PROVIDER,
-    VERCEL_GIT_COMMIT_SHA,
-    VERCEL_GIT_COMMIT_REF,
-    VERCEL_GIT_REPO_OWNER,
-    VERCEL_GIT_REPO_SLUG,
+    GIT_REPO_OWNER = "Badbird5907",
+    GIT_REPO_SLUG = "portfolio-v3",
+    WORKERS_CI_COMMIT_SHA,
+    WORKERS_CI_BRANCH,
   } = process.env;
   let infoString = "";
-  if (enviornment === "production") {
+  if (environment === "production") {
     infoString = "prod";
-  } else if (enviornment === "development") {
+  } else if (environment === "development") {
     infoString = "dev";
-  } else if (enviornment === "preview" || enviornment === "test") {
+  } else if (environment === "test") {
     infoString = "preview";
   } else {
-    if (enviornment) infoString = enviornment;
-    else infoString = "unknown";
+    infoString = environment ?? "unknown";
   }
-  if (vercel) {
-    infoString += ":vercel";
+
+  if (cloudflare) {
+    infoString += ":cloudflare";
   }
-  let url = "";
-  if (VERCEL_GIT_PROVIDER && VERCEL_GIT_COMMIT_SHA && VERCEL_GIT_COMMIT_REF) {
-    if (
-      VERCEL_GIT_PROVIDER === "github" &&
-      VERCEL_GIT_REPO_OWNER &&
-      VERCEL_GIT_REPO_SLUG
-    ) {
-      url = `https://github.com/${VERCEL_GIT_REPO_OWNER}/${VERCEL_GIT_REPO_SLUG}/commit/${VERCEL_GIT_COMMIT_SHA}`;
-    }
-    const shortCommit = VERCEL_GIT_COMMIT_SHA.slice(0, 7);
-    infoString += `:${VERCEL_GIT_PROVIDER}:${VERCEL_GIT_COMMIT_REF}/${shortCommit}`;
-  } else if (!vercel) {
+
+  let url = `https://github.com/${GIT_REPO_OWNER}/${GIT_REPO_SLUG}`;
+  if (WORKERS_CI_COMMIT_SHA && WORKERS_CI_BRANCH) {
+    url += `/commit/${WORKERS_CI_COMMIT_SHA}`;
+    const shortCommit = WORKERS_CI_COMMIT_SHA.slice(0, 7);
+    infoString += `:github:${WORKERS_CI_BRANCH}/${shortCommit}`;
+  } else if (!cloudflare) {
     // run command: git rev-parse HEAD to get the short commit
     // run command: git rev-parse --abbrev-ref HEAD to get the branch name
     let shortCommit = "";

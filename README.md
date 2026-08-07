@@ -9,7 +9,13 @@ This is version 3 of my portfolio, built with Next.js, Tailwind CSS, and TypeScr
 - Motion(.dev)
 - React Query
 - OpenMeteo API
-- Vercel
+- Cloudflare Workers (via OpenNext)
+
+## Cloudflare Workers
+
+- `pnpm preview` builds the application and runs it in the local Workers runtime.
+- `pnpm deploy` builds and deploys the application with Wrangler.
+- Production deploys are built from the `master` branch by Cloudflare Workers Builds.
 
 
 ## Inspiration

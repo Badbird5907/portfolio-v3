@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "portfolio-v3",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-07",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "portfolio-v3"
+    }
+  ],
+  "images": {
+    "binding": "IMAGES"
+  },
+  "vars": {
+    "DEPLOYMENT_PLATFORM": "cloudflare",
+    "GIT_REPO_OWNER": "Badbird5907",
+    "GIT_REPO_SLUG": "portfolio-v3"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
