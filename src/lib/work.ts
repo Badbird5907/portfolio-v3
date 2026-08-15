@@ -1,4 +1,3 @@
-
 type Work = {
   name: string;
   title?: string;
@@ -11,11 +10,33 @@ type Work = {
 
 export const work: Work[] = [
   {
+    name: "The Relationship Company",
+    title: "Product Engineer",
+    url: "https://relationship.co/",
+    start: "August 2026",
+    end: "Present",
+    points: [
+      "Building a consumer mobile app with React, NextJS, and Capacitor, shipping to both iOS and Android from a single codebase.",
+      "Building an AI-powered SMS/RCS agent to drive automated, conversational user engagement.",
+      "Developing the companion web app with NextJS, TailwindCSS, Drizzle ORM, and PostgreSQL.",
+      "Handling DevOps across the stack, managing deployments and infrastructure on Fly.io.",
+    ],
+    tags: [
+      "React",
+      "NextJS",
+      "Capacitor",
+      "TailwindCSS",
+      "Drizzle",
+      "PostgreSQL",
+      "Fly.io",
+    ],
+  },
+  {
     name: "Connect",
     title: "Founding Software Engineer",
     url: "https://connectalum.com/",
     start: "January 2024",
-    end: "Present",
+    end: "July 2026",
     points: [
       "Led development of a multi-tenant platform, serving 9,000+ monthly active users, using React, NextJS, PostgreSQL, and Drizzle ORM, ensuring seamless scalability and UX",
       "Developed and launched a LinkedIn-like social platform with features such as real-time chat, connection-building, and posts with recommendations based on the user’s preferences",

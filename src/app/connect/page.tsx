@@ -62,7 +62,7 @@ export default async function ConnectPage({
               </span>
               . Currently a{" "}
               <span className="font-medium text-foreground">
-                Founding Software Engineer
+                Product Engineer
               </span>{" "}
               at{" "}
               <a
@@ -71,7 +71,7 @@ export default async function ConnectPage({
                 rel="noopener noreferrer"
                 className="font-medium text-foreground hover:underline"
               >
-                ConnectAlum
+                The Relationship Company
               </a>
               . I&apos;m passionate about startups and building software that
               actually matters.
