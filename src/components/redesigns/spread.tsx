@@ -321,7 +321,7 @@ const RedesignSpread = ({ posts = [] }: { posts?: PostRef[] }) => {
           {/* Photos + badge */}
           <Enter
             delay={0.4}
-            className="flex flex-wrap items-center gap-6 lg:col-span-3 lg:col-start-10 lg:block"
+            className="flex flex-wrap items-center justify-center gap-6 lg:col-span-3 lg:col-start-10 lg:block"
           >
             <Polaroid
               src="/img/about/me.png"
@@ -338,7 +338,7 @@ const RedesignSpread = ({ posts = [] }: { posts?: PostRef[] }) => {
               float={1}
               className="lg:-mt-10 lg:ml-20"
             />
-            <div className="lg:-mt-2 lg:ml-2">
+            <div className="hidden lg:-mt-2 lg:ml-2 lg:block">
               <Badge />
             </div>
           </Enter>

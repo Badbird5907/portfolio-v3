@@ -416,7 +416,7 @@ const RedesignDither = ({ posts = [] }: { posts?: PostRef[] }) => {
           {/* Photos + badge */}
           <Flicker
             delay={0.5}
-            className="flex flex-wrap items-center gap-6 lg:col-span-3 lg:col-start-10 lg:block"
+            className="flex flex-wrap items-center justify-center gap-6 lg:col-span-3 lg:col-start-10 lg:block"
           >
             <DitherPolaroid
               src="/img/about/me.png"
@@ -435,7 +435,7 @@ const RedesignDither = ({ posts = [] }: { posts?: PostRef[] }) => {
               revealDelay={450}
               className="lg:-mt-10 lg:ml-20"
             />
-            <div className="lg:-mt-2 lg:ml-2">
+            <div className="hidden lg:-mt-2 lg:ml-2 lg:block">
               <Badge />
             </div>
           </Flicker>
