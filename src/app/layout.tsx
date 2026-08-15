@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Cursor from "@/components/cursor";
 import Footer from "@/components/footer";
+import HideOnRoutes from "@/components/hide-on-routes";
 import Navbar from "@/components/nav";
 import { Providers } from "@/components/providers";
 
@@ -32,9 +33,13 @@ export default function RootLayout({
         className={`font-sans ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <Navbar />
+          <HideOnRoutes prefix="/redesigns">
+            <Navbar />
+          </HideOnRoutes>
           {children}
-          <Footer />
+          <HideOnRoutes prefix="/redesigns">
+            <Footer />
+          </HideOnRoutes>
           <Cursor />
         </Providers>
       </body>
