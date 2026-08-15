@@ -14,6 +14,10 @@ const jiti = createJiti(fileURLToPath(import.meta.url));
 jiti("./src/env");
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: [
+    "evans-macbook-pro.coin-squeaker.ts.net",
+    "100.78.220.37",
+  ],
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],

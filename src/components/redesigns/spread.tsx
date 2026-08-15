@@ -187,7 +187,7 @@ const RedesignSpread = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70" />
       </div>
 
-      <div className="relative z-10 flex min-h-screen flex-col p-6 md:p-10">
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1700px] flex-col p-6 md:p-10">
         {/* Top row */}
         <Enter className="flex items-start justify-between">
           <div>

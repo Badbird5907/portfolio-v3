@@ -85,10 +85,17 @@ const Flicker = ({
   </motion.div>
 );
 
-// Photo dither resolves smoothly from coarse pixels to the real image
-const PHOTO_DITHER_START = 14;
-const PHOTO_DITHER_END = 1;
-const PHOTO_REVEAL_MS = 1100;
+// Photo reveal: a true ordered dither (8x8 Bayer) that refines in discrete
+// steps — pixel size and color quantization jump, no continuous scaling —
+// then crossfades into the real image
+const REVEAL_STEPS = [
+  { size: 6, colorSteps: 1 },
+  { size: 4, colorSteps: 2 },
+  { size: 4, colorSteps: 3 },
+  { size: 2, colorSteps: 4 },
+  { size: 2, colorSteps: 6 },
+];
+const STEP_MS = 100;
 
 const DitherPolaroid = ({
   src,
@@ -107,29 +114,34 @@ const DitherPolaroid = ({
   revealDelay?: number;
   className?: string;
 }) => {
-  const [anim, setAnim] = useState({ size: PHOTO_DITHER_START, opacity: 1 });
+  const [step, setStep] = useState(0);
+  const [revealed, setRevealed] = useState(false);
+  const [gone, setGone] = useState(false);
 
   useEffect(() => {
-    let raf = 0;
-    let start: number | null = null;
-    const tick = (t: number) => {
-      if (start === null) start = t;
-      const p = Math.min((t - start) / PHOTO_REVEAL_MS, 1);
-      const ease = 1 - (1 - p) ** 3;
-      const size =
-        PHOTO_DITHER_START - (PHOTO_DITHER_START - PHOTO_DITHER_END) * ease;
-      const opacity = p < 0.7 ? 1 : 1 - (p - 0.7) / 0.3;
-      setAnim({ size, opacity });
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
+    let interval: ReturnType<typeof setInterval> | undefined;
+    let fadeTimeout: ReturnType<typeof setTimeout> | undefined;
     const timeout = setTimeout(() => {
-      raf = requestAnimationFrame(tick);
+      let i = 0;
+      interval = setInterval(() => {
+        i += 1;
+        if (i >= REVEAL_STEPS.length) {
+          clearInterval(interval);
+          setRevealed(true);
+          fadeTimeout = setTimeout(() => setGone(true), 400);
+          return;
+        }
+        setStep(i);
+      }, STEP_MS);
     }, revealDelay);
     return () => {
       clearTimeout(timeout);
-      cancelAnimationFrame(raf);
+      if (interval) clearInterval(interval);
+      if (fadeTimeout) clearTimeout(fadeTimeout);
     };
   }, [revealDelay]);
+
+  const { size, colorSteps } = REVEAL_STEPS[step];
 
   return (
     <motion.div
@@ -157,19 +169,19 @@ const DitherPolaroid = ({
             sizes="(max-width: 768px) 160px, 192px"
             className="object-cover"
           />
-          {/* Dither overlay shrinks its pixels smoothly, then crossfades away */}
-          {anim.opacity > 0 && (
+          {/* Dither overlay refines in discrete steps, then crossfades away */}
+          {!gone && (
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{ opacity: anim.opacity }}
+              className="pointer-events-none absolute inset-0 transition-opacity duration-300 ease-out"
+              style={{ opacity: revealed ? 0 : 1 }}
             >
               <ImageDithering
                 image={src}
                 originalColors
-                colorSteps={2}
-                type="4x4"
-                size={anim.size}
+                colorSteps={colorSteps}
+                type="8x8"
+                size={size}
                 fit="cover"
                 style={{ width: "100%", height: "100%" }}
               />
@@ -264,7 +276,7 @@ const RedesignDither = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/60" />
       </div>
 
-      <div className="relative z-10 flex min-h-screen flex-col p-6 md:p-10">
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1700px] flex-col p-6 md:p-10">
         {/* Top row */}
         <Flicker className="flex items-start justify-between">
           <div>
@@ -449,7 +461,7 @@ const RedesignDither = () => {
               alt="Evan Yu"
               caption="fig. 01 — me"
               rotate={3}
-              revealDelay={500}
+              revealDelay={300}
               className="relative z-10"
             />
             <DitherPolaroid
@@ -458,7 +470,7 @@ const RedesignDither = () => {
               caption="fig. 02 — home"
               rotate={-4}
               float={1}
-              revealDelay={750}
+              revealDelay={450}
               className="lg:-mt-10 lg:ml-20"
             />
             <div className="lg:-mt-2 lg:ml-2">
