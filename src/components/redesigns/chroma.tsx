@@ -1,6 +1,10 @@
 "use client";
 
-import { Dithering, ImageDithering } from "@paper-design/shaders-react";
+import {
+  Dithering,
+  ImageDithering,
+  MeshGradient,
+} from "@paper-design/shaders-react";
 import { motion } from "motion/react";
 import { Newsreader } from "next/font/google";
 import Image from "next/image";
@@ -203,13 +207,13 @@ const Badge = () => (
       <title>rotating badge</title>
       <defs>
         <path
-          id="dither-badge-circle"
+          id="chroma-badge-circle"
           d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0"
         />
       </defs>
       <text className="fill-white/40 font-mono text-[7.5px] uppercase">
         <textPath
-          href="#dither-badge-circle"
+          href="#chroma-badge-circle"
           textLength={237}
           lengthAdjust="spacingAndGlyphs"
         >
@@ -225,7 +229,7 @@ const Badge = () => (
   </motion.div>
 );
 
-const RedesignDither = ({ posts = [] }: { posts?: PostRef[] }) => {
+const RedesignChroma = ({ posts = [] }: { posts?: PostRef[] }) => {
   const [ditherSize, setDitherSize] = useState(LOADIN_STEPS[0]);
 
   // Step the background dither from coarse to fine, like an image resolving
@@ -247,18 +251,34 @@ const RedesignDither = ({ posts = [] }: { posts?: PostRef[] }) => {
       className="redesign relative min-h-screen overflow-x-clip font-sans [--primary:#f1eee7]"
       style={{ backgroundColor: "#050507", color: "rgba(241,238,231,0.78)" }}
     >
-      {/* Fixed dithering background */}
+      {/* Fixed background: vivid mesh gradient with a dither field layered on top */}
       <div className="fixed inset-0">
-        <Dithering
-          colorBack="#050507"
-          colorFront="#22304f"
-          shape="warp"
-          type="4x4"
-          size={ditherSize}
-          speed={0.25}
+        <MeshGradient
+          colors={[
+            "#050509",
+            "#0e1e40",
+            "#0e352f",
+            "#221845",
+            "#3c2136",
+            "#050509",
+          ]}
+          distortion={0.8}
+          swirl={0.5}
+          speed={0.18}
           style={{ width: "100%", height: "100%" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/60" />
+        <div className="absolute inset-0 opacity-25 mix-blend-overlay">
+          <Dithering
+            colorBack="#00000000"
+            colorFront="#ffffff"
+            shape="warp"
+            type="4x4"
+            size={ditherSize}
+            speed={0.25}
+            style={{ width: "100%", height: "100%" }}
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/25 to-black/65" />
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1700px] flex-col p-6 md:p-10">
@@ -466,4 +486,4 @@ const RedesignDither = ({ posts = [] }: { posts?: PostRef[] }) => {
   );
 };
 
-export default RedesignDither;
+export default RedesignChroma;

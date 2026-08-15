@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const designs = [
   { slug: "spread", label: "Spread" },
   { slug: "dither", label: "Dither" },
+  { slug: "chroma", label: "Chroma" },
 ];
 
 const RedesignSwitcher = () => {

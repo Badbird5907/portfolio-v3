@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Day = {
   date: string;
@@ -10,26 +10,51 @@ type Day = {
 
 const GITHUB_USER = "Badbird5907";
 
+// Opaque equivalents of white at 10/30/50/70/95% over the page background
+// (#050507) — solid so the dithered backdrop doesn't show through the cells.
 const LEVELS = [
-  "bg-white/10",
-  "bg-white/30",
-  "bg-white/50",
-  "bg-white/70",
-  "bg-white/95",
+  "bg-[#1e1e20]",
+  "bg-[#505051]",
+  "bg-[#828283]",
+  "bg-[#b4b4b5]",
+  "bg-[#f3f3f3]",
 ];
 
 const ContributionGraph = () => {
-  const [days, setDays] = useState<Day[] | null>(null);
+  const [allDays, setAllDays] = useState<Day[] | null>(null);
   const [failed, setFailed] = useState(false);
+  const [view, setView] = useState<"last" | string>("last");
 
   useEffect(() => {
     fetch(
-      `https://github-contributions-api.jogruber.de/v4/${GITHUB_USER}?y=last`,
+      `https://github-contributions-api.jogruber.de/v4/${GITHUB_USER}?y=all`,
     )
       .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
-      .then((data: { contributions: Day[] }) => setDays(data.contributions))
+      .then((data: { contributions: Day[] }) =>
+        // The API returns newest-year-first; sort chronologically
+        setAllDays(
+          [...data.contributions].sort((a, b) => a.date.localeCompare(b.date)),
+        ),
+      )
       .catch(() => setFailed(true));
   }, []);
+
+  const years = useMemo(() => {
+    if (!allDays) return [];
+    const seen = new Set<string>();
+    for (const day of allDays) seen.add(day.date.slice(0, 4));
+    return [...seen].sort((a, b) => Number(b) - Number(a));
+  }, [allDays]);
+
+  const days = useMemo(() => {
+    if (!allDays) return null;
+    if (view === "last") {
+      // Current year is zero-filled to Dec 31 — clip future days first
+      const today = new Date().toISOString().slice(0, 10);
+      return allDays.filter((day) => day.date <= today).slice(-365);
+    }
+    return allDays.filter((day) => day.date.startsWith(view));
+  }, [allDays, view]);
 
   if (failed) {
     return (
@@ -49,7 +74,7 @@ const ContributionGraph = () => {
   const total = days?.reduce((sum, day) => sum + day.count, 0) ?? 0;
 
   // Align the first week column to the weekday of the first day
-  const cells: (Day | null)[] = days
+  const cells: (Day | null)[] = days?.length
     ? [...Array(new Date(days[0].date).getUTCDay()).fill(null), ...days]
     : [];
   const weeks: (Day | null)[][] = [];
@@ -99,13 +124,13 @@ const ContributionGraph = () => {
                       // biome-ignore lint/suspicious/noArrayIndexKey: skeleton cells have no identity
                       dayIndex
                     }`}
-                    className="aspect-square w-full rounded-[2px] bg-white/10"
+                    className="aspect-square w-full rounded-[2px] bg-[#1e1e20]"
                   />
                 ))}
               </div>
             ))}
       </div>
-      <p className="mt-3 font-mono text-[11px] tracking-wide text-white/50">
+      <div className="mt-3 flex items-baseline justify-between gap-4 font-mono text-[11px] tracking-wide text-white/50">
         <a
           href={`https://github.com/${GITHUB_USER}`}
           target="_blank"
@@ -113,11 +138,42 @@ const ContributionGraph = () => {
           className="hover:underline underline-offset-[3px]"
         >
           {days
-            ? `${total.toLocaleString()} contributions in the last year`
+            ? `${total.toLocaleString()} contributions in ${
+                view === "last" ? "the last year" : view
+              }`
             : "github"}{" "}
           ↗
         </a>
-      </p>
+        {years.length > 0 && (
+          <span className="relative inline-flex shrink-0 items-center">
+            <select
+              aria-label="Select year"
+              value={view}
+              onChange={(event) => setView(event.target.value)}
+              className="cursor-pointer appearance-none bg-transparent pr-3 text-right font-mono text-[11px] tracking-wide text-white/50! transition-colors hover:text-white!"
+            >
+              <option value="last" className="bg-zinc-900 text-zinc-200">
+                Last Year
+              </option>
+              {years.map((year) => (
+                <option
+                  key={year}
+                  value={year}
+                  className="bg-zinc-900 text-zinc-200"
+                >
+                  {year}
+                </option>
+              ))}
+            </select>
+            <span
+              aria-hidden
+              className="pointer-events-none absolute right-0 text-[8px] text-white/40"
+            >
+              ▾
+            </span>
+          </span>
+        )}
+      </div>
     </div>
   );
 };
