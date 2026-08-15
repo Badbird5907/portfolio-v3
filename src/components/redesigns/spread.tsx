@@ -5,7 +5,9 @@ import { motion } from "motion/react";
 import { Newsreader } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import ContributionGraph from "@/components/redesigns/contribution-graph";
+import CornerMeta from "@/components/redesigns/corner-meta";
+import WritingList, { type PostRef } from "@/components/redesigns/writing-list";
 
 const newsreader = Newsreader({
   subsets: ["latin"],
@@ -17,7 +19,7 @@ const IVORY = "#f1eee7";
 
 const workRows = [
   {
-    years: "2026–",
+    years: "2026–Present",
     org: "The Relationship Company",
     role: "Product Engineer",
     url: "https://relationship.co/",
@@ -29,7 +31,7 @@ const workRows = [
     url: "https://connectalum.com/",
   },
   {
-    years: "2022–",
+    years: "2022–25",
     org: "Freelancing",
     role: "Software & infrastructure for clients",
   },
@@ -42,12 +44,6 @@ const links = [
   ["Blog", "/blog"],
   ["Hackathons", "/hackathons"],
 ];
-
-const stack =
-  "TypeScript · React · NextJS · PostgreSQL · Drizzle · Redis · Java · AWS · Docker";
-
-const interests =
-  "Robotics & hardware design · Competitive programming · Hackathons";
 
 const underline =
   "underline underline-offset-[3px] decoration-white/30 transition-colors hover:decoration-white";
@@ -138,8 +134,12 @@ const Badge = () => (
           d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0"
         />
       </defs>
-      <text className="fill-white/40 font-mono text-[8.5px] uppercase tracking-[0.22em]">
-        <textPath href="#badge-circle">
+      <text className="fill-white/40 font-mono text-[7.5px] uppercase">
+        <textPath
+          href="#badge-circle"
+          textLength={237}
+          lengthAdjust="spacingAndGlyphs"
+        >
           Evan Yu · Toronto · Software Engineer ·
         </textPath>
       </text>
@@ -152,23 +152,7 @@ const Badge = () => (
   </motion.div>
 );
 
-const RedesignSpread = () => {
-  const [time, setTime] = useState("");
-  useEffect(() => {
-    const tick = () =>
-      setTime(
-        new Date().toLocaleTimeString("en-CA", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-          timeZone: "America/Toronto",
-        }),
-      );
-    tick();
-    const id = setInterval(tick, 30_000);
-    return () => clearInterval(id);
-  }, []);
-
+const RedesignSpread = ({ posts = [] }: { posts?: PostRef[] }) => {
   return (
     <div
       className="redesign relative min-h-screen overflow-x-clip font-sans [--primary:#f1eee7]"
@@ -201,16 +185,7 @@ const RedesignSpread = () => {
               Software engineer in Toronto
             </p>
           </div>
-          <p className="hidden text-right font-mono text-[10px] uppercase leading-relaxed tracking-[0.18em] text-white/45 md:block">
-            43.6532° N — 79.3832° W
-            <br />
-            Toronto{" "}
-            {time && (
-              <>
-                <span className="animate-pulse">·</span> {time} EST
-              </>
-            )}
-          </p>
+          <CornerMeta />
         </Enter>
 
         {/* Spread */}
@@ -275,17 +250,8 @@ const RedesignSpread = () => {
             </Enter>
 
             <Enter delay={0.3}>
-              <MiniLabel>Stack</MiniLabel>
-              <p className="border-t border-white/15 pt-3 font-mono text-[11px] leading-relaxed tracking-wide text-white/50">
-                {stack}
-              </p>
-            </Enter>
-
-            <Enter delay={0.4}>
-              <MiniLabel>Interests</MiniLabel>
-              <p className="border-t border-white/15 pt-3 font-mono text-[11px] leading-relaxed tracking-wide text-white/50">
-                {interests}
-              </p>
+              <MiniLabel>GitHub</MiniLabel>
+              <ContributionGraph />
             </Enter>
           </div>
 
@@ -331,17 +297,12 @@ const RedesignSpread = () => {
               </ul>
             </Enter>
 
-            <Enter delay={0.45}>
-              <MiniLabel>Education</MiniLabel>
-              <div className="flex items-baseline justify-between gap-4 border-t border-white/15 py-2.5">
-                <div>
-                  <p className="text-[14px]" style={{ color: IVORY }}>
-                    University of Toronto
-                  </p>
-                  <p className="text-[12px] text-white/50">Mathematics major</p>
-                </div>
-              </div>
-            </Enter>
+            {posts.length > 0 && (
+              <Enter delay={0.45}>
+                <MiniLabel>Writing</MiniLabel>
+                <WritingList posts={posts} />
+              </Enter>
+            )}
 
             <Enter delay={0.55}>
               <MiniLabel>Contact</MiniLabel>
